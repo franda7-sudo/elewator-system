@@ -1,0 +1,138 @@
+/* ============================
+   GLOBAL DARK ADMIN THEME
+   ============================ */
+
+/* TŁO CAŁEGO PANELU ADMINA */
+body, html {
+  background: #0f0f0f !important;
+  color: #e5e7eb !important;
+  font-family: Arial, sans-serif;
+}
+
+/* GŁÓWNY WRAPPER ADMINA */
+.admin-map-wrapper,
+.admin-dashboard-wrapper,
+.admin-content-wrapper {
+  background: #111 !important;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #222;
+  margin-top: 70px; /* odstęp od sticky menu */
+}
+
+/* TŁO MAPY */
+.map-container {
+  background: #111 !important;
+  border: 1px solid #333 !important;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* MENU ADMINA */
+.MuiBox-root[component="nav"] {
+  background: #1a1a1a !important;
+  border-bottom: 1px solid #333 !important;
+}
+
+/* LINKI W MENU */
+.MuiBox-root a {
+  color: #bbb !important;
+}
+
+.MuiBox-root a:hover {
+  color: #fff !important;
+}
+
+/* AKTYWNY LINK */
+.MuiBox-root a.active {
+  color: #4caf50 !important;
+  background: rgba(76, 175, 80, 0.12) !important;
+  border-radius: 4px;
+}
+
+/* KARTY, PANELIKI, BOX-Y */
+.admin-card,
+.panel-box,
+.settings-box {
+  background: #1a1a1a !important;
+  border: 1px solid #333 !important;
+  border-radius: 10px;
+  padding: 16px;
+  color: #eee !important;
+}
+
+/* TABELKI */
+table {
+  background: #1a1a1a !important;
+  color: #eee !important;
+}
+
+table th {
+  background: #222 !important;
+  color: #ddd !important;
+}
+
+table td {
+  border-color: #333 !important;
+}
+
+/* INPUTY */
+input, select, textarea {
+  background: #1f1f1f !important;
+  border: 1px solid #333 !important;
+  color: #eee !important;
+  border-radius: 6px;
+  padding: 6px;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #4caf50 !important;
+  outline: none !important;
+}
+
+/* PRZYCISKI */
+button {
+  background: #2a2a2a !important;
+  color: #eee !important;
+  border: 1px solid #444 !important;
+  border-radius: 6px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #333 !important;
+  border-color: #4caf50 !important;
+}
+
+/* TOOLTIPY */
+.floating-tooltip {
+  background: rgba(20, 20, 20, 0.75) !important;
+  border: 1px solid #444 !important;
+  color: #fff !important;
+}
+
+/* SIDE PANEL */
+.side-panel {
+  background: #151515 !important;
+  border-left: 1px solid #333 !important;
+  color: #eee !important;
+}
+
+/* SCROLLBARY */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}

@@ -1,0 +1,109 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "./admin-map.css";
+
+export default function AdminMap({ cells = {} }) {
+  const navigate = useNavigate();
+
+  const grainColor = (grain) => {
+    switch (grain) {
+      case "pszenica": return "#ffb347"; // pomarańcz
+      case "zyto": return "#7fff7f";     // zielony
+      case "owies": return "#fff176";    // żółty
+      case "jeczmien": return "#81d4fa"; // błękit
+      case "pellet": return "#b0bec5";   // szary
+      default: return "#444";
+    }
+  };
+
+  const statusColor = (status) => {
+    switch (status) {
+      case "blocked": return "#ff4444";
+      case "emergency": return "#ff0000";
+      default: return "#00eaff";
+    }
+  };
+
+  const renderSection = (title, ids) => (
+    <div className="map-section">
+      <h2>{title}</h2>
+      <div className="map-grid">
+        {ids.map((id) => {
+          const cell = cells[id] || {
+            amount: 0,
+            capacity: 0,
+            grain: null,
+            status: "active",
+          };
+
+          const fill = cell.capacity > 0 ? (cell.amount / cell.capacity) * 100 : 0;
+
+          return (
+            <div
+              className="cell-tile"
+              key={id}
+              style={{
+                borderColor: statusColor(cell.status),
+                boxShadow: `0 0 6px ${statusColor(cell.status)}55`,
+              }}
+              onClick={() => window.open(`/admin/correction/${id}`, "_blank")}
+              title={`Komora: ${id}
+Zboże: ${cell.grain || "—"}
+Ilość: ${cell.amount} t
+Pojemność: ${cell.capacity} t
+Status: ${cell.status}`}
+            >
+              <div className="cell-header">
+                <span className="cell-id">{id}</span>
+                <span
+                  className="cell-grain"
+                  style={{ color: grainColor(cell.grain) }}
+                >
+                  {cell.grain || "—"}
+                </span>
+              </div>
+
+              <div className="cell-capacity">
+                <div className="capacity-bar">
+                  <div
+                    className="capacity-fill"
+                    style={{
+                      width: `${fill}%`,
+                      background: grainColor(cell.grain),
+                    }}
+                  ></div>
+                </div>
+                <div className="capacity-text">
+                  {cell.amount} / {cell.capacity} t
+                </div>
+              </div>
+
+              <div className="cell-status">
+                {cell.status === "active" && "Aktywna"}
+                {cell.status === "blocked" && "Zablokowana"}
+                {cell.status === "emergency" && "AWARIA"}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="admin-map">
+      <div className="map-top-buttons">
+        <button onClick={() => navigate("/admin/dashboard")}>Dashboard</button>
+        <button onClick={() => navigate("/admin/reports")}>Raporty</button>
+        <button onClick={() => navigate("/admin/priorities")}>Priorytety</button>
+        <button onClick={() => navigate("/admin/cells")}>Konfiguracja</button>
+        <button onClick={() => navigate("/admin/settings")}>Ustawienia</button>
+      </div>
+
+      {renderSection("SEKCJA S (1S–40S)", Array.from({ length: 40 }, (_, i) => `${i + 1}S`))}
+      {renderSection("SEKCJA N (1N–20N)", Array.from({ length: 20 }, (_, i) => `${i + 1}N`))}
+      {renderSection("SEKCJA G (21G–25G)", ["21G", "22G", "23G", "24G", "25G"])}
+      {renderSection("KOMORY 43–52", ["43","44","45","46","47","48","49","50","51","52"])}
+    </div>
+  );
+}

@@ -1,0 +1,54 @@
+/* LAYOUT OPERATORA — DARK MODE */
+
+.operator-layout {
+  background: #111;
+  min-height: 100vh;
+  padding: 20px;
+  color: #eee;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* TREŚĆ PODSTRON */
+.operator-content {
+  flex: 1;
+  background: #151515;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* DOLNE MENU — PRZYCISKI */
+.operator-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* PRZYCISKI */
+.nav-btn {
+  flex: 1;
+  text-align: center;
+  padding: 14px 0;
+  font-size: 16px;
+  font-weight: 600;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #eee;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: #222;
+  border-color: #4caf50;
+  transform: scale(1.03);
+}
+
+.nav-btn.active {
+  background: #222;
+  border-color: #4caf50;
+}

@@ -1,0 +1,25 @@
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.breadcrumbs {
+  font-size: 18px;
+  color: #ccc;
+}
+
+.breadcrumbs a {
+  color: #4caf50;
+  text-decoration: none;
+}
+
+.back-button {
+  background: #333;
+  color: #eee;
+  border: 1px solid #555;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}

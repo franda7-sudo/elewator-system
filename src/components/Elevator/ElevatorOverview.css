@@ -1,0 +1,68 @@
+.elev-root {
+  padding: 16px;
+  color: #fff;
+  background: #101010;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.elev-root h1 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.elev-root section {
+  margin-bottom: 24px;
+}
+
+.cells-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 10px;
+}
+
+.cell-card {
+  background: #1e1e1e;
+  border-radius: 8px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.cell-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.cell-id {
+  font-weight: 600;
+}
+
+.cell-body {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+}
+
+.cell-bar {
+  width: 18px;
+  height: 60px;
+  border-radius: 4px;
+  background: #2b2b2b;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.cell-bar-fill {
+  width: 100%;
+  transition: height 0.2s ease-out;
+}
+
+.cell-info {
+  font-size: 0.8rem;
+}

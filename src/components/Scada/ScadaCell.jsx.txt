@@ -1,0 +1,52 @@
+// src/components/Scada/ScadaCell.jsx
+import "./Scada.css";
+
+export default function ScadaCell({ cell, onClick }) {
+  const getColor = () => {
+    if (!cell.grain) return "#d9d9d9";
+    const g = cell.grain.toLowerCase();
+    if (g === "pszenica") return "#FF9800";
+    if (g === "zyto") return "#90EE90";
+    if (g === "owies") return "#FFF59D";
+    if (g === "jeczmien") return "#87CEEB";
+    if (g === "pellet") return "#9E9E9E";
+    return "#cccccc";
+  };
+
+  const sensors = cell.dallas ? Object.values(cell.dallas) : [];
+  const validTemps = sensors.filter((s) => s.temp !== null).map((s) => s.temp);
+  const hasFault = sensors.some((s) => s.fault);
+
+  const avgTemp = validTemps.length
+    ? (validTemps.reduce((a, b) => a + b, 0) / validTemps.length).toFixed(1)
+    : null;
+
+  return (
+    <div
+      className="scada-cell"
+      style={{
+        background: getColor(),
+        border: cell.weight > 0 ? "2px solid #333" : "1px solid #777",
+      }}
+      onClick={onClick}
+      title={`Komora: ${cell.id}
+Zboże: ${cell.grain || "—"}
+Masa: ${cell.weight || 0} t
+Dallas: ${avgTemp ?? "—"} °C${hasFault ? " (uszkodzony czujnik)" : ""}`}
+    >
+      <div className="scada-cell-id">{cell.id}</div>
+
+      {hasFault && <div className="scada-cell-fault">⚠️</div>}
+
+      {avgTemp && (
+        <div className="scada-cell-temp">
+          🌡 {avgTemp}°C
+        </div>
+      )}
+
+      <div className="scada-cell-weight">
+        {cell.weight ? `${cell.weight} t` : "pusta"}
+      </div>
+    </div>
+  );
+}

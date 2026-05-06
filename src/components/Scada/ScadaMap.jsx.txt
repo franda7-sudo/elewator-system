@@ -1,0 +1,59 @@
+// src/components/Scada/ScadaMap.jsx
+import { useEffect, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase";
+import ScadaCell from "./ScadaCell";
+import CellPanel from "../Admin/CellPanel";
+import "./Scada.css";
+
+export default function ScadaMap() {
+  const [cells, setCells] = useState([]);
+  const [selectedCell, setSelectedCell] = useState(null);
+
+  useEffect(() => {
+    const unsub = onSnapshot(collection(db, "cells"), (snap) => {
+      setCells(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+    return () => unsub();
+  }, []);
+
+  const cellsS = cells.filter((c) => c.id.endsWith("S"));
+  const cellsN = cells.filter((c) => c.id.endsWith("N"));
+  const cellsG = cells.filter((c) => c.id.endsWith("G"));
+  const cellsW = cells.filter((c) => /^[0-9]+$/.test(c.id));
+
+  const renderSection = (title, list, className) => (
+    <div className="scada-section">
+      <h3>{title}</h3>
+      <div className={`scada-grid ${className}`}>
+        {list.map((cell) => (
+          <ScadaCell
+            key={cell.id}
+            cell={cell}
+            onClick={() => setSelectedCell(cell)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="scada-map">
+      <h2>SCADA — Mapa Elewatora</h2>
+
+      <div className="scada-layout">
+        {renderSection("Stary elewator (S)", cellsS, "grid-S")}
+        {renderSection("Nowy elewator (N)", cellsN, "grid-N")}
+        {renderSection("Komory G", cellsG, "grid-G")}
+        {renderSection("Komory wydawcze", cellsW, "grid-W")}
+      </div>
+
+      {selectedCell && (
+        <CellPanel
+          cell={selectedCell}
+          onClose={() => setSelectedCell(null)}
+        />
+      )}
+    </div>
+  );
+}

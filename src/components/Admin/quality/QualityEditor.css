@@ -1,0 +1,79 @@
+.quality-editor {
+  padding: 20px;
+  color: #ddd;
+  font-family: Arial, sans-serif;
+}
+
+.section {
+  margin-bottom: 25px;
+}
+
+.param-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.param-name {
+  width: 150px;
+  font-weight: bold;
+}
+
+/* LISTA SCROLL */
+.quality-cells-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #444;
+  padding: 10px;
+  background: #1e1e1e;
+}
+
+/* POJEDYNCZA KOMORA */
+.quality-cell-row {
+  padding: 6px 10px;
+  margin-bottom: 4px;
+  background: #2a2a2a;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #ddd;
+  user-select: none;
+}
+
+.quality-cell-row:hover {
+  background: #333;
+}
+
+/* WYBRANA */
+.quality-selected {
+  background: #4caf50 !important;
+  color: #000 !important;
+  font-weight: bold;
+}
+
+/* ZABLOKOWANA */
+.quality-disabled {
+  background: #555 !important;
+  color: #888 !important;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+/* WYŚWIETLANIE WYBRANYCH */
+.quality-selected-cells {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.group-row {
+  padding: 10px;
+  background: #222;
+  border: 1px solid #444;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.group-actions button {
+  margin-right: 10px;
+}

@@ -1,0 +1,126 @@
+.sidepanel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 350px;
+  height: 100vh;
+  background: #1e293b;
+  border-left: 1px solid #334155;
+  box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  color: #f8fafc;
+}
+
+.sidepanel-header {
+  padding: 20px;
+  background: #0f172a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #334155;
+}
+
+.close-x {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.sidepanel-content {
+  padding: 20px;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.sidepanel label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.sidepanel input[type="text"],
+.sidepanel input[type="number"],
+.sidepanel select {
+  margin-top: 5px;
+  padding: 8px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  color: white;
+}
+
+.input-danger {
+  border-color: #ef4444 !important;
+  color: #fca5a5 !important;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.quality-preview {
+  background: #0f172a;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border-left: 3px solid #fbbf24;
+}
+
+.quality-preview h4 {
+  margin: 0 0 8px 0;
+  font-size: 0.8rem;
+  color: #fbbf24;
+}
+
+.quality-param {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+}
+
+.checkbox-row {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: #f8fafc !important;
+}
+
+.sidepanel-buttons {
+  padding: 20px;
+  background: #0f172a;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.save-btn {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.save-btn:hover { background: #059669; }
+
+.close-btn {
+  background: #334155;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}

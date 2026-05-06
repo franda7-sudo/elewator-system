@@ -1,0 +1,88 @@
+.map-wrapper {
+  padding: 20px;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+/* Komórka */
+
+.cell {
+  width: 90px;
+  height: 120px;
+  background: #f2f2f2;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 11px;
+}
+
+.cell:hover {
+  background: #e0e0e0;
+}
+
+.cell-id {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+.cell-grain {
+  text-align: center;
+  font-size: 11px;
+  color: #333;
+}
+
+.cell-amount {
+  text-align: center;
+  font-size: 10px;
+  color: #444;
+}
+
+.cell-params {
+  font-size: 9px;
+  text-align: center;
+  color: #555;
+}
+
+.fill-bar {
+  width: 100%;
+  height: 8px;
+  background: #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.fill {
+  height: 100%;
+}
+
+/* Alarmy */
+
+.alarm {
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.alarm-warning {
+  background: #ffdd99;
+}
+
+.alarm-critical {
+  background: #ff9999;
+}

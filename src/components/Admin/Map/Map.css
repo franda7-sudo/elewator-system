@@ -1,0 +1,128 @@
+.map-root {
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  background: #111;
+}
+
+/* Sekcje */
+.map-section {
+  margin-bottom: 32px;
+}
+
+.map-section h2 {
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* SEKCJA S */
+.section-S {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+}
+
+/* SEKCJA N */
+.section-N {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-N .row-even,
+.section-N .row-odd {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+}
+
+/* SEKCJA G */
+.section-G {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+/* OPERACYJNE */
+.section-O {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+}
+
+/* KAFELKI KOMÓR */
+.chamber {
+  border-radius: 6px;
+  padding: 8px;
+  border: 2px solid #333;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-sizing: border-box;
+  position: relative;
+  color: #000;              /* 🔥 CZARNA CZCIONKA */
+  text-shadow: 0 0 2px rgba(255,255,255,0.6); /* lekkie podbicie */
+  background-color: #ddd;   /* gdy brak zboża / fallback */
+}
+
+.chamber.ok {
+  border-color: #2ecc71;
+}
+
+.chamber.bad {
+  border-color: #e74c3c;
+}
+
+.warn-icon {
+  margin-left: 4px;
+  color: #c0392b;
+}
+
+/* Tooltip */
+.chamber-tooltip {
+  position: absolute;
+  top: -10px;
+  left: 100%;
+  background: #222;
+  color: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  z-index: 999;
+  width: 220px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+/* Header */
+.chamber-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.chamber-body {
+  font-size: 11px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.chamber-grain {
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.chamber-quality-line {
+  line-height: 1.2;
+}
+
+.chamber-footer {
+  font-size: 10px;
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 2px;
+  opacity: 0.8;
+}

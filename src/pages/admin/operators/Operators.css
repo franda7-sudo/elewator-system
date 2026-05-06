@@ -1,0 +1,20 @@
+.operators-container {
+  padding: 20px;
+}
+
+.operators-panel input {
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.operators-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.operators-table th,
+.operators-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}

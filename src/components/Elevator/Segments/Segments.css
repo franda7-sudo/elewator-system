@@ -1,0 +1,31 @@
+.elevator-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.module-block {
+  padding: 15px;
+  border: 2px solid #555;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+}
+
+.module-block h3 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #444;
+}
+
+.row:last-child {
+  border-bottom: none;
+}

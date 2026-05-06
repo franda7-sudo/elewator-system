@@ -1,0 +1,76 @@
+:root {
+  --color-pszenica: #f3e5ab;
+  --color-zyto: #dcedc8;
+  --color-owies: #cfd8dc;
+  --color-alarm: #ff4444;
+  --color-ui-blue: #0077ff;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  background: #f0f2f5;
+}
+/* Tło panelu */
+.grain-panel {
+  background: #2f2f2f;        /* ciemne tło */
+  padding: 20px;
+  border-radius: 8px;
+  color: #f5f5f5;             /* jasna czcionka */
+  font-size: 20px;            /* większa czcionka */
+}
+
+/* Nagłówki */
+.grain-panel h2,
+.grain-panel h3,
+.grain-panel h4 {
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+/* Grupy */
+.grain-group {
+  background: #3a3a3a;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #555;
+}
+
+/* Inputy i selecty */
+.grain-panel input,
+.grain-panel select {
+  padding: 12px 16px;         /* DUŻE pola */
+  font-size: 20px;            /* DUŻY tekst */
+  border-radius: 6px;
+  border: 1px solid #888;
+  background: #fff;
+  color: #111;
+  margin: 5px 0;
+}
+
+/* Przyciski */
+.grain-panel button {
+  padding: 12px 20px;
+  font-size: 20px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.grain-panel button:hover {
+  background: #125a9c;
+}
+
+/* Komórki przypisane */
+.cell-tag {
+  display: inline-block;
+  padding: 8px 12px;
+  background: #444;
+  border-radius: 6px;
+  margin-right: 10px;
+  font-size: 18px;
+}

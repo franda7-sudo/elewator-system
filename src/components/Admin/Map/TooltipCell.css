@@ -1,0 +1,52 @@
+.tooltipcell {
+  background: #1e1e1e;
+  color: #fff;
+  padding: 14px;
+  border-radius: 6px;
+  width: 260px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  font-size: 14px;
+}
+
+.tooltipcell h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 18px;
+  color: #4caf50;
+}
+
+.tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.tooltip-row label {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.tooltip-row input {
+  width: 120px;
+  background: #333;
+  border: none;
+  padding: 4px 6px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.tooltip-save {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+  background: #2196f3;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tooltip-save:hover {
+  background: #42a5f5;
+}

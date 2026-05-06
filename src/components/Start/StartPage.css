@@ -1,0 +1,30 @@
+.btn-superuser {
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 15px;
+  background: linear-gradient(45deg, #fbbf24, #f59e0b);
+  color: black;
+  border: none;
+  border-radius: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.2s;
+  letter-spacing: 1px;
+}
+
+.btn-superuser:hover {
+  transform: scale(1.02);
+  filter: brightness(1.1);
+}
+
+.btn-admin {
+  background: #27272a; /* Ciemniejszy dla odróżnienia */
+  color: white;
+  border: 1px solid #3f3f46;
+}
+
+.btn-operator {
+  background: transparent;
+  color: #fbbf24;
+  border: 2px solid #fbbf24;
+}

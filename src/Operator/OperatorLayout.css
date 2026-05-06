@@ -1,0 +1,71 @@
+/* LAYOUT OPERATORA — DARK MODE */
+
+.operator-layout {
+  background: #111;
+  /* Użycie 100dvh (dynamic viewport height) zapobiega problemom z paskami przeglądarek na mobile */
+  min-height: 100vh; 
+  padding: 15px;
+  color: #eee;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TREŚĆ PODSTRON */
+.operator-content {
+  flex: 1;
+  background: #151515;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  overflow-y: auto; /* Dodano, by treść mogła się przewijać niezależnie od menu */
+}
+
+/* DOLNE MENU — PRZYCISKI */
+.operator-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  /* Zapewnia, że menu zawsze jest na dole, nawet przy małej ilości treści */
+  margin-top: auto; 
+}
+
+/* PRZYCISKI */
+.nav-btn {
+  flex: 1;
+  text-align: center;
+  padding: 14px 5px; /* Mniejszy padding boczny, by tekst się mieścił */
+  font-size: 14px;   /* Bezpieczniejsza wielkość przy 5 przyciskach w rzędzie */
+  font-weight: 600;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #eee;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  
+  /* Centrowanie zawartości (ikona + tekst) */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+/* EFEKTY INTERAKCJI */
+.nav-btn:hover {
+  background: #222;
+  border-color: #4caf50;
+  transform: translateY(-2px); /* Delikatne uniesienie zamiast skalowania (często lepiej wygląda) */
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
+}
+
+/* KLASA AKTYWNA (z React Router NavLink) */
+.nav-btn.active {
+  background: #222;
+  border-color: #4caf50;
+  color: #4caf50; /* Dodano kolor tekstu, by wyróżnić aktywną opcję */
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
+}

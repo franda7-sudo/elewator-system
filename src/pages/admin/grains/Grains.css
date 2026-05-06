@@ -1,0 +1,47 @@
+.grains-container {
+  padding: 20px;
+}
+
+.grain-group-list button {
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  border: 1px solid #aaa;
+  background: #eee;
+}
+
+.grain-group-list button:hover {
+  background: #ddd;
+}
+
+.group-editor,
+.group-cells {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #aaa;
+  background: #fafafa;
+}
+
+.group-editor input[type="number"],
+.group-editor input[type="text"] {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.group-cells-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.group-cells-grid div {
+  padding: 10px;
+  border: 2px solid #aaa;
+  cursor: pointer;
+  text-align: center;
+}
+
+.group-cells-grid div.selected {
+  border-color: green;
+  background: #eaffea;
+}

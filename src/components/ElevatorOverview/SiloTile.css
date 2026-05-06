@@ -1,0 +1,124 @@
+/* SiloTile.css */
+.silo-tile {
+  background: #eee;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.silo-visual-container {
+  flex-grow: 1;
+  background: #ddd; /* Tło pustego silosa */
+  margin: 5px;
+  border-radius: 2px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+.silo-fill {
+  width: 100%;
+  background: #f3e5ab; /* Kolor pszenicy */
+  transition: height 0.4s ease;
+  position: relative;
+}
+
+/* Kolory zależne od zboża */
+.silo-fill.zyto { background: #dcedc8; }
+.silo-fill.owies { background: #cfd8dc; }
+
+/* Kluczowy alarm LIFO - czerwone dno */
+.danger-bottom {
+  border-bottom: 8px solid #ff0000;
+  box-shadow: 0 -5px 10px rgba(255,0,0,0.3) inset;
+}
+
+.silo-id {
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  font-size: 10px;
+  font-weight: bold;
+  z-index: 2;
+}
+
+.silo-info-mini {
+  padding: 2px 5px;
+  font-size: 9px;
+  background: white;
+  text-align: center;
+}
+
+.grain-param {
+  font-weight: bold;
+  color: #0077ff;
+}
+
+.lifo-alert-dot {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 8px;
+  height: 8px;
+  background: red;
+  border-radius: 50%;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+/* Styl podstawowy dla komputerów/tabletów (Desktop) */
+.silos-grid-s {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr); /* 10 kolumn w rzędzie */
+  gap: 10px;
+}
+
+/* --- ADAPTACJA MOBILNA (Smartfon) --- */
+@media (max-width: 768px) {
+  /* Zmieniamy układ baterii S na 4 kolumny, by kafelki były większe */
+  .silos-grid-s {
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 5px;
+  }
+
+  /* Bloki N+G układamy jeden pod drugim */
+  .blocks-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .silo-block {
+    width: 90vw; /* Szerzej na telefonie */
+    height: auto;
+    aspect-ratio: 1/1;
+  }
+
+  /* Powiększamy przyciski nawigacji, żeby łatwo było trafić palcem */
+  .menu-item {
+    padding: 15px;
+    font-size: 1.1rem;
+  }
+
+  /* Ukrywamy zbędne teksty w nagłówku, by oszczędzić miejsce */
+  .elevator-summary {
+    flex-wrap: wrap;
+    font-size: 14px;
+    gap: 10px;
+  }
+}
+
+/* Specjalny widok dla bardzo małych ekranów */
+@media (max-width: 480px) {
+  .silos-grid-s {
+    grid-template-columns: repeat(2, 1fr); /* Tylko 2 silosy obok siebie */
+  }
+}

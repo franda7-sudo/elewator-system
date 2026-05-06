@@ -1,0 +1,26 @@
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+
+import AdminMap from "../components/Admin/AdminMap";
+import AdminParams from "../components/Admin/AdminParams";
+import AdminCorrections from "../components/Admin/AdminCorrections";
+import AdminUsers from "../components/Admin/AdminUsers";
+
+import DallasPanel from "../components/Admin/DallasPanel";
+import DallasUploader from "../components/Admin/DallasUploader";
+
+export default function AdminRoutes() {
+  return (
+    <Routes>
+      <Route path="/admin/map" element={<AdminMap />} />
+      <Route path="/admin/params" element={<AdminParams />} />
+      <Route path="/admin/corrections" element={<AdminCorrections />} />
+
+      {/* NOWE */}
+      <Route path="/admin/dallas" element={<DallasPanel />} />
+      <Route path="/admin/dallas-upload" element={<DallasUploader />} />
+
+      <Route path="/admin/users" element={<AdminUsers />} />
+    </Routes>
+  );
+}

@@ -1,0 +1,157 @@
+/* /src/styles/elevator.css */
+
+/* MAPA ELEWATORA */
+.elevator-map-wrapper {
+  position: relative;
+  display: flex;
+  gap: 20px;
+}
+
+.elevator-map-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 60px);
+  gap: 6px;
+}
+
+.cell {
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  border: 2px solid #222;
+}
+
+/* STATUSY KOMÓR */
+.cell-ok {
+  background: #1f8f2e;
+  color: white;
+}
+
+.cell-warning {
+  background: #d4a017;
+  color: black;
+}
+
+.cell-critical {
+  background: #c62828;
+  color: white;
+}
+
+/* TOOLTIP SCADA */
+.elevator-tooltip {
+  position: absolute;
+  left: 650px;
+  top: 20px;
+  background: #111;
+  color: #eee;
+  padding: 15px;
+  border-radius: 8px;
+  width: 260px;
+  border: 1px solid #444;
+  box-shadow: 0 0 10px #000;
+  z-index: 100;
+}
+
+.elevator-tooltip h4 {
+  margin-top: 0;
+  color: #4fc3f7;
+}
+
+.tooltip-alarms {
+  margin-top: 10px;
+  padding-left: 20px;
+  color: #ff5252;
+}
+
+/* FORMULARZ KOREKTY */
+.correction-box {
+  background: #1b1b1b;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #333;
+  width: 350px;
+}
+
+.correction-box input {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 12px;
+  background: #222;
+  border: 1px solid #444;
+  color: #eee;
+  border-radius: 6px;
+}
+
+/* STATUSY PARAMETRÓW */
+.metric {
+  padding: 6px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.metric-ok {
+  background: rgba(0, 255, 0, 0.15);
+  border-left: 4px solid #00e676;
+}
+
+.metric-warning {
+  background: rgba(255, 193, 7, 0.2);
+  border-left: 4px solid #ffca28;
+}
+
+.metric-critical {
+  background: rgba(244, 67, 54, 0.2);
+  border-left: 4px solid #ef5350;
+}
+
+/* HISTORIA */
+.history-box {
+  margin-top: 20px;
+  background: #111;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.history-entry {
+  padding: 10px;
+  border-bottom: 1px solid #333;
+}
+
+.history-entry:last-child {
+  border-bottom: none;
+}
+.global-alarms-box {
+  background: #111;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  width: 300px;
+  height: fit-content;
+}
+
+.alarm {
+  padding: 8px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+}
+
+.alarm-warning {
+  background: rgba(255, 193, 7, 0.2);
+  border-left: 4px solid #ffca28;
+}
+
+.alarm-critical {
+  background: rgba(244, 67, 54, 0.2);
+  border-left: 4px solid #ef5350;
+}
+.trend-mini-chart {
+  width: 220px;
+  height: 60px;
+  margin-top: 10px;
+}

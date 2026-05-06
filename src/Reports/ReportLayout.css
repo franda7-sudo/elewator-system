@@ -1,0 +1,17 @@
+.report-layout {
+  padding: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.report-box {
+  width: 100%;
+  max-width: 1400px;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  padding: 20px 25px;
+  border-radius: 6px;
+  color: #eee;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}

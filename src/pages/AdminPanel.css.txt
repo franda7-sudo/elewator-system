@@ -1,0 +1,61 @@
+/* === ADMIN LAYOUT === */
+.admin-layout {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background: #0d0f14;
+  color: #e6e6e6;
+  font-family: "Inter", sans-serif;
+}
+
+/* === SIDEBAR === */
+.admin-menu {
+  width: 240px;
+  background: rgba(20, 22, 30, 0.65);
+  backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.menu-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 0 20px 10px 20px;
+  color: #8ab4ff;
+  text-shadow: 0 0 6px rgba(138, 180, 255, 0.6);
+}
+
+.menu-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 0.95rem;
+  border-left: 3px solid transparent;
+  color: #cfcfcf;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+.menu-item.active {
+  background: rgba(138, 180, 255, 0.12);
+  border-left: 3px solid #8ab4ff;
+  color: #8ab4ff;
+  text-shadow: 0 0 6px rgba(138, 180, 255, 0.6);
+}
+
+/* === CONTENT === */
+.admin-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+.menu-icon {
+  margin-right: 10px;
+  opacity: 0.8;
+}

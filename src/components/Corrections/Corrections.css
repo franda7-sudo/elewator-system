@@ -1,0 +1,42 @@
+/* /src/components/Corrections/Corrections.css */
+
+.form-box {
+  background: #f8f8f8;
+  padding: 18px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  max-width: 450px;
+}
+
+.corrections-box {
+  margin-top: 20px;
+}
+
+.corrections-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.corrections-table th,
+.corrections-table td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.corrections-table tr:hover {
+  background: #f0f0f0;
+}
+
+.action-btn {
+  padding: 10px 14px;
+  background: #0077ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.action-btn:hover {
+  background: #005fcc;
+}

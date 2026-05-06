@@ -1,0 +1,123 @@
+import React from "react";
+import { useElevator } from "../context/ElevatorContext";
+import Chamber from "./Chamber";
+import "./Map.css";
+
+// =========================
+//  POJEMNOŚCI I WYSOKOŚCI
+// =========================
+const getCapacity = (id) => {
+  if (id.endsWith("S") || id.endsWith("G")) return 250;   // S + G
+  if (id.endsWith("N")) return 1060;                      // N
+
+  const num = parseInt(id, 10);
+
+  // Operacyjne
+  if ([44, 45, 48, 49, 51, 52].includes(num)) return 60;
+  if ([46, 47, 50].includes(num)) return 120;
+  if (num === 43) return 80;
+
+  return null;
+};
+
+const getHeight = (id) => {
+  if (id.endsWith("N")) return 28; // N
+  if (id.endsWith("S") || id.endsWith("G")) return 24; // S + G
+  const num = parseInt(id, 10);
+  if (num >= 43 && num <= 52) return 24; // operacyjne
+  return null;
+};
+
+export default function Map() {
+  const { cells } = useElevator();
+
+  // =========================
+  //  SEKCJA S (4 × 10)
+  // =========================
+  const S_IDS = [
+    ...Array.from({ length: 10 }, (_, i) => `${i + 1}S`),
+    ...Array.from({ length: 10 }, (_, i) => `${i + 11}S`),
+    ...Array.from({ length: 10 }, (_, i) => `${i + 21}S`),
+    ...Array.from({ length: 10 }, (_, i) => `${i + 31}S`),
+  ];
+
+  // =========================
+  //  SEKCJA N (2 × 10)
+  //  parzyste na górze, nieparzyste na dole
+  // =========================
+  const N_EVEN_IDS = Array.from({ length: 10 }, (_, i) => `${2 * (i + 1)}N`);
+  const N_ODD_IDS = Array.from({ length: 10 }, (_, i) => `${2 * i + 1}N`);
+
+  // =========================
+  //  SEKCJA G (21G–25G) — poziomo
+  // =========================
+  const G_IDS = Array.from({ length: 5 }, (_, i) => `${21 + i}G`);
+
+  // =========================
+  //  SEKCJA O (43–52)
+  // =========================
+  const O_IDS = Array.from({ length: 10 }, (_, i) => `${43 + i}`);
+
+  const mapChamber = (id) => {
+    const base = cells[id] || { id };
+    return {
+      ...base,
+      id,
+      capacity: getCapacity(id),
+      height: getHeight(id),
+    };
+  };
+
+  return (
+    <div className="map-root">
+
+      {/* SEKCJA S */}
+      <div className="map-section">
+        <h2>SEKCJA S</h2>
+        <div className="section-S">
+          {S_IDS.map((id) => (
+            <Chamber key={id} chamber={mapChamber(id)} />
+          ))}
+        </div>
+      </div>
+
+      {/* SEKCJA N */}
+      <div className="map-section">
+        <h2>SEKCJA N</h2>
+        <div className="section-N">
+          <div className="row-even">
+            {N_EVEN_IDS.map((id) => (
+              <Chamber key={id} chamber={mapChamber(id)} />
+            ))}
+          </div>
+          <div className="row-odd">
+            {N_ODD_IDS.map((id) => (
+              <Chamber key={id} chamber={mapChamber(id)} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* SEKCJA G */}
+      <div className="map-section">
+        <h2>SEKCJA G (gwiazdki)</h2>
+        <div className="section-G">
+          {G_IDS.map((id) => (
+            <Chamber key={id} chamber={mapChamber(id)} />
+          ))}
+        </div>
+      </div>
+
+      {/* OPERACYJNE */}
+      <div className="map-section">
+        <h2>KOMORY OPERACYJNE (43–52)</h2>
+        <div className="section-O">
+          {O_IDS.map((id) => (
+            <Chamber key={id} chamber={mapChamber(id)} />
+          ))}
+        </div>
+      </div>
+
+    </div>
+  );
+}

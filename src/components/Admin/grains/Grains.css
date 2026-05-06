@@ -1,0 +1,122 @@
+/* Kontener główny */
+.grains-container {
+  padding: 20px;
+  color: #eee;
+}
+
+/* Lista przycisków grup */
+.grain-group-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.grain-group-list button {
+  padding: 8px 16px;
+  cursor: pointer;
+  border: 1px solid #444;
+  background: #2a2a2a;
+  color: #fff;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.grain-group-list button:hover {
+  background: #3d3d3d;
+  border-color: #666;
+}
+
+.grain-group-list button.active {
+  background: #4caf50;
+  border-color: #4caf50;
+  color: white;
+}
+
+/* Edytor i sekcje */
+.group-editor,
+.group-cells {
+  margin-top: 20px;
+  padding: 25px;
+  border: 1px solid #333;
+  background: #1e1e1e; /* Spójne z SidePanelem i Menu */
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.group-editor h3 {
+  color: #4caf50;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+/* Formularze w edytorze */
+.group-editor input[type="number"],
+.group-editor input[type="text"] {
+  background: #111;
+  border: 1px solid #444;
+  color: #4caf50;
+  padding: 8px;
+  border-radius: 4px;
+  margin: 0 10px;
+  font-weight: bold;
+}
+
+.group-editor input:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+/* Tabela parametrów (z poprzedniego kroku) */
+.grain-params-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.grain-params-table th {
+  text-align: left;
+  color: #888;
+  padding: 12px;
+  border-bottom: 2px solid #333;
+}
+
+.grain-params-table td {
+  padding: 12px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+/* Siatka komór przypisanych do grupy */
+.group-cells-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.group-cells-grid div {
+  padding: 15px 10px;
+  border: 2px solid #444;
+  background: #252525;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+  font-weight: bold;
+  color: #bbb;
+}
+
+.group-cells-grid div:hover {
+  border-color: #666;
+  color: #fff;
+}
+
+/* Podświetlenie wybranych komór w grupie */
+.group-cells-grid div.selected {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.15);
+  color: #4caf50;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
+}

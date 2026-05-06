@@ -1,0 +1,98 @@
+/* GŁÓWNY KONTEJNER */
+.operator-view {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  font-size: 22px;
+  color: #f8f8f8;
+  line-height: 1.5;
+}
+
+/* NAGŁÓWEK */
+.operator-view h2 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* POLA INPUT / SELECT */
+.operator-view input,
+.operator-view select {
+  width: 100%;
+  padding: 16px;
+  font-size: 22px;
+  border-radius: 12px;
+  border: 2px solid #ccc;
+  background: #ffffff;
+  color: #000;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.operator-view input:focus,
+.operator-view select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* PRZYCISKI */
+.operator-view button {
+  width: 100%;
+  padding: 18px;
+  font-size: 24px;
+  font-weight: bold;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: #007bff;
+  color: #fff;
+  transition: 0.2s;
+}
+
+.operator-view button:hover {
+  background: #005fcc;
+}
+
+.operator-view button:disabled {
+  background: #777;
+  cursor: not-allowed;
+}
+
+/* KOMORY – DUŻE KAFLE */
+.cell {
+  padding: 22px;
+  background: #333;
+  color: #fff;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  font-size: 26px;
+  text-align: center;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: 0.2s;
+}
+
+.cell:hover {
+  border-color: #888;
+}
+
+.cell.selected {
+  background: #16a34a;
+  border-color: #0f7a34;
+}
+
+/* BŁĘDY */
+.error-msg {
+  background: #ff4444;
+  padding: 12px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 20px;
+  text-align: center;
+}

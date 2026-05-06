@@ -1,0 +1,133 @@
+.map-root {
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.map-section {
+  margin-bottom: 32px;
+}
+
+.map-section h2 {
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ========================= */
+/*  SEKCJA S — 4 × 10         */
+/* ========================= */
+.section-S {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+}
+
+/* ========================= */
+/*  SEKCJA N — 2 × 10         */
+/* ========================= */
+.section-N {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-N .row-even,
+.section-N .row-odd {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+}
+
+/* ========================= */
+/*  SEKCJA G — poziomo        */
+/* ========================= */
+.section-G {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+/* ========================= */
+/*  OPERACYJNE — 10 w rzędzie */
+/* ========================= */
+.section-O {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+}
+
+/* ========================= */
+/*  KAFELKI KOMÓR             */
+/* ========================= */
+.chamber {
+  border-radius: 6px;
+  padding: 8px;
+  border: 2px solid #333;
+  background: #eee;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chamber-header,
+.chamber-footer {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+}
+
+.chamber-body {
+  font-size: 11px;
+}
+.chamber {
+  border-radius: 6px;
+  padding: 8px;
+  border: 2px solid #333;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-sizing: border-box;
+}
+
+/* Góra: lewy – tonaż, prawy – nr komory */
+.chamber-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.chamber-tons {
+  text-align: left;
+}
+
+.chamber-id {
+  text-align: right;
+}
+
+/* Środek: nazwa zboża + parametry jakościowe */
+.chamber-body {
+  font-size: 11px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.chamber-grain {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.chamber-quality-line {
+  line-height: 1.2;
+}
+
+/* Dół: data pierwszego zasypu */
+.chamber-footer {
+  font-size: 10px;
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 2px;
+}

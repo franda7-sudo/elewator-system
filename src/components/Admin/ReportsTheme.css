@@ -1,0 +1,44 @@
+/* RAPORTY — DARK MODE */
+
+.reports-wrapper {
+  background: #111 !important;
+  color: #eee !important;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #222;
+}
+
+.report-card {
+  background: #1a1a1a !important;
+  border: 1px solid #333 !important;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.report-card h2,
+.report-card h3 {
+  color: #fff !important;
+}
+
+table {
+  background: #1a1a1a !important;
+  color: #eee !important;
+  border: 1px solid #333 !important;
+}
+
+table th {
+  background: #222 !important;
+  color: #ddd !important;
+}
+
+table td {
+  border-color: #333 !important;
+}
+
+input,
+select {
+  background: #1f1f1f !important;
+  border: 1px solid #333 !important;
+  color: #eee !important;
+}

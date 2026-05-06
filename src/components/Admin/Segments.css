@@ -1,0 +1,23 @@
+.segment {
+  stroke: #444;
+  stroke-width: 1px;
+  cursor: pointer;
+  transition: fill 0.2s ease;
+}
+
+.segment:hover {
+  stroke: #fff;
+  stroke-width: 2px;
+}
+
+.segment.active {
+  fill: #4caf50;
+}
+
+.segment.alarm {
+  fill: #f44336;
+}
+
+.segment.warning {
+  fill: #ff9800;
+}

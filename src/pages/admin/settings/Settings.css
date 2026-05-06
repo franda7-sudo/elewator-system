@@ -1,0 +1,15 @@
+.settings-container {
+  padding: 20px;
+}
+
+.settings-panel {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #aaa;
+  background: #fafafa;
+}
+
+.settings-panel input {
+  margin-left: 10px;
+  margin-bottom: 10px;
+}

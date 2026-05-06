@@ -1,0 +1,22 @@
+.cells-container {
+  padding: 20px;
+}
+
+.cells-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.cells-table th,
+.cells-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.cells-editor {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #aaa;
+  background: #fafafa;
+}

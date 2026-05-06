@@ -1,0 +1,60 @@
+.scada-map {
+  padding: 20px;
+}
+
+.scada-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.scada-section h3 {
+  margin-bottom: 10px;
+}
+
+.scada-grid {
+  display: grid;
+  gap: 6px;
+}
+
+.grid-S {
+  grid-template-columns: repeat(10, 70px);
+}
+
+.grid-N {
+  grid-template-columns: repeat(10, 70px);
+}
+
+.grid-G {
+  grid-template-columns: repeat(5, 70px);
+}
+
+.grid-W {
+  grid-template-columns: repeat(10, 70px);
+}
+
+.scada-cell {
+  width: 70px;
+  height: 70px;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.scada-cell-id {
+  font-weight: bold;
+}
+
+.scada-cell-weight {
+  text-align: right;
+  font-size: 11px;
+}
+.scada-cell-fault {
+  font-size: 14px;
+  color: red;
+  text-align: left;
+}

@@ -1,0 +1,59 @@
+/* --- DODATKI DO AdminLogin.css --- */
+
+/* Ikona z literą A */
+.flex.justify-center.mb-6 div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease;
+}
+
+.flex.justify-center.mb-6 div:hover {
+    border-color: #fbbf24;
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
+    transform: rotate(-5deg);
+}
+
+/* Komunikat o błędzie */
+.bg-red-500\/10 {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+    animation: shake 0.4s ease-in-out;
+}
+
+/* Animacja błędu (potrząsanie) */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Dodatkowy blask w tle (ten z JSX) */
+.absolute.inset-0.pointer-events-none {
+    z-index: 0;
+}
+
+/* Dopisek na dole strony */
+.absolute.bottom-6 {
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* Responsywność dla małych ekranów */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 30px 20px;
+        margin: 10px;
+    }
+    
+    .login-card h1 {
+        font-size: 1.5rem;
+    }
+}
