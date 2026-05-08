@@ -1,6 +1,7 @@
 import React from "react";
 import { Box } from "@mui/material";
-import { NavLink } from "react-router-dom"; // Link został usunięty na rzecz NavLink dla spójności
+import { NavLink } from "react-router-dom";
+import OperatorRelease from "./OperatorRelease";
 
 export default function AdminMenu() {
   const baseStyle = {
@@ -23,7 +24,6 @@ export default function AdminMenu() {
     backgroundColor: "rgba(76, 175, 80, 0.1)",
   };
 
-  // Funkcja pomocnicza, aby nie powtarzać logiki stylu w każdym NavLink
   const getNavLinkStyle = ({ isActive }) => (isActive ? activeStyle : baseStyle);
 
   return (
@@ -41,9 +41,11 @@ export default function AdminMenu() {
         position: "sticky",
         top: 0,
         zIndex: 1100,
+        // Stylowanie scrollbara, żeby nie szpecił czarnego menu
         "&::-webkit-scrollbar": { height: "4px" },
         "&::-webkit-scrollbar-thumb": { bgcolor: "#333", borderRadius: "10px" },
         scrollbarWidth: "thin",
+        scrollbarColor: "#333 #1e1e1e",
       }}
     >
       <Box
@@ -54,11 +56,13 @@ export default function AdminMenu() {
           display: "flex",
           alignItems: "center",
           flexShrink: 0,
+          userSelect: "none"
         }}
       >
         ELEVATOR PRO
       </Box>
 
+      {/* Lista linków - dodano 'end', aby uniknąć błędnego podświetlania wielu linków naraz */}
       <NavLink to="/admin/map" style={getNavLinkStyle}>🗺️ Mapa</NavLink>
       <NavLink to="/admin/permissions" style={getNavLinkStyle}>🔐 Uprawnienia / PIN</NavLink>
       <NavLink to="/admin/operators" style={getNavLinkStyle}>👥 Operatorzy</NavLink>
@@ -73,11 +77,7 @@ export default function AdminMenu() {
       <NavLink to="/admin/corrections" style={getNavLinkStyle}>⚖ Korekty</NavLink>
       <NavLink to="/admin/settings" style={getNavLinkStyle}>⚙️ Ustawienia</NavLink>
       <NavLink to="/admin/diagnostics" style={getNavLinkStyle}>🧰 Diagnostyka</NavLink>
-
-      {/* POPRAWIONY ELEMENT - ujednolicony styl do reszty menu */}
-      <NavLink to="/admin/release-programs" style={getNavLinkStyle}>
-        ⚙️ Programy Wydań
-      </NavLink>
+      <NavLink to="/admin/release-programs" style={getNavLinkStyle}>⚙️ Programy Wydań</NavLink>
     </Box>
   );
 }

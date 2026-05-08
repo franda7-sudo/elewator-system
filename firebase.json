@@ -15,8 +15,30 @@
   ],
   "apphosting": [
     {
-      "backendId": "elewator-system",
+      "backendId": "elewator-gms",
       "rootDir": "/"
+    },
+    {
+      "backendId": "elewator-gms",
+      "rootDir": "/",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "functions"
+      ]
+    },
+    {
+      "backendId": "elewator-gms",
+      "rootDir": "/",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "functions"
+      ]
     }
   ],
   "hosting": {

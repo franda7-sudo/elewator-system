@@ -1,0 +1,84 @@
+.release-wrapper {
+  padding: 20px;
+  color: #fff;
+}
+
+.object-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.obj-btn {
+  padding: 10px 20px;
+  background: #1e293b;
+  border: 2px solid #334155;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.obj-btn.active {
+  background: #0ea5e9;
+  border-color: #38bdf8;
+}
+
+.obj-btn:hover {
+  background: #334155;
+}
+
+.grain-select {
+  margin: 20px 0;
+}
+
+.cells-list {
+  margin-top: 20px;
+}
+
+.cell-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  margin-bottom: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cell-row.selected {
+  background: #1e3a8a;
+  border-color: #3b82f6;
+}
+
+.percent-table {
+  margin-top: 20px;
+  padding: 15px;
+  background: #0f172a;
+  border-radius: 8px;
+  border: 1px solid #1e293b;
+}
+
+.percent-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.percent-sum {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.save-btn {
+  margin-top: 15px;
+  padding: 12px 20px;
+  background: #22c55e;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #000;
+}

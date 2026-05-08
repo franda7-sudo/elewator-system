@@ -1,0 +1,86 @@
+import React, { useEffect, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../firebase";
+
+const OBJECTS = ["Młyn", "Płatkarnia", "Kaszarnia", "Zewnętrzne"];
+
+export default function OperatorIssueList() {
+  const [selectedObject, setSelectedObject] = useState("Młyn");
+  const [pendingIssues, setPendingIssues] = useState([]);
+
+  useEffect(() => {
+    const unsub = onSnapshot(collection(db, "pendingIssues"), (snap) => {
+      setPendingIssues(
+        snap.docs.map((d) => ({ firestoreId: d.id, ...d.data() }))
+      );
+    });
+    return () => unsub();
+  }, []);
+
+  const pendingForObject = pendingIssues.filter(
+    (i) => i.object === selectedObject
+  );
+
+  return (
+    <div style={{ padding: 20, color: "white", maxWidth: 900, margin: "auto" }}>
+      <h2 style={{ color: "#3b82f6" }}>Trwające wydania</h2>
+
+      <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+        {OBJECTS.map((obj) => (
+          <button
+            key={obj}
+            onClick={() => setSelectedObject(obj)}
+            style={{
+              padding: "8px 14px",
+              borderRadius: 8,
+              border: "none",
+              cursor: "pointer",
+              background:
+                selectedObject === obj ? "#3b82f6" : "#1e293b",
+              color: "white",
+              fontWeight: selectedObject === obj ? "bold" : "normal"
+            }}
+          >
+            {obj}
+          </button>
+        ))}
+      </div>
+
+      {pendingForObject.length === 0 && (
+        <p style={{ opacity: 0.7 }}>Brak aktywnych wydań dla tego obiektu.</p>
+      )}
+
+      {pendingForObject.map((issue) => (
+        <div
+          key={issue.firestoreId}
+          style={{
+            background: "#1e293b",
+            padding: 20,
+            borderRadius: 12,
+            marginBottom: 15
+          }}
+        >
+          <div>
+            <b>Zboże:</b> {issue.grain}
+          </div>
+          <div>
+            <b>Ilość:</b> {issue.totalAmount} t
+          </div>
+          <div>
+            <b>Operator:</b> {issue.operator}
+          </div>
+          <div>
+            <b>Dokument:</b> {issue.docNumber || "-"}
+          </div>
+
+          <h4 style={{ marginTop: 10 }}>Rozdział:</h4>
+          {issue.program.map((c) => (
+            <div key={c.id}>
+              {c.id}: {c.toTake.toFixed(2)} t ({c.percent}%)
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}

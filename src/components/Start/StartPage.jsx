@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { auth, db } from "../../firebase";
+import PzzLogo from "../Common/PzzLogo"; // 🔥 DODANE LOGO
 
 export default function StartPage() {
   const navigate = useNavigate();
@@ -50,7 +51,6 @@ export default function StartPage() {
       const userData = userDoc.data();
       const userRole = userData.role?.toLowerCase();
 
-      // Admin/Owner ma dostęp do wszystkiego, Superuser do Superuser i Admin
       const isManagement = userRole === "admin" || userRole === "owner" || userRole === "superuser";
 
       if (isManagement) {
@@ -78,12 +78,9 @@ export default function StartPage() {
     setError("");
 
     try {
-      // WAŻNE: Firebase jest case-sensitive. 
-      // Jeśli w bazie masz "Adam", wpisanie "adam" nie zadziała.
-      // Dlatego szukamy dokładnie takiej wartości, jaką wpisał użytkownik.
       const q = query(
         collection(db, "users"), 
-        where("name", "==", name.trim()), // .trim() usuwa przypadkowe spacje na końcu
+        where("name", "==", name.trim()),
         where("pin", "==", pin.trim()),
         where("role", "==", "operator")
       );
@@ -111,9 +108,17 @@ export default function StartPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-amber-950 text-white flex flex-col font-sans">
-      <header className="p-6 md:px-10 flex justify-between">
-        <div className="text-zinc-400 uppercase tracking-widest text-sm">{date}</div>
-        <div className="text-green-400 text-[10px] font-bold uppercase">System Online</div>
+      
+      {/* 🔥 HEADER Z LOGO */}
+      <header className="p-6 md:px-10 flex justify-between items-center">
+        <div className="flex flex-col">
+          <PzzLogo width={160} /> {/* 🔥 UKRYTE WEJŚCIE (klik 5×) */}
+          <div className="text-zinc-400 uppercase tracking-widest text-sm mt-2">{date}</div>
+        </div>
+
+        <div className="text-green-400 text-[10px] font-bold uppercase">
+          System Online
+        </div>
       </header>
 
       <main className="flex-1 flex flex-col items-center justify-center px-6">
@@ -125,7 +130,7 @@ export default function StartPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <button onClick={() => setView("superuser")} className="bg-zinc-900/50 border border-zinc-800 p-8 rounded-[2rem] hover:border-amber-500 transition-all">
                 <div className="text-3xl mb-2">👤</div>
-                <h3 className="font-bold uppercase text-sm">Kierownik</h3>
+                <h3 className="font-bold uppercase text-sm">SuperUser</h3>
               </button>
               <button onClick={() => setView("admin")} className="bg-zinc-900/50 border border-zinc-800 p-8 rounded-[2rem] hover:border-amber-500 transition-all">
                 <div className="text-3xl mb-2">⚙️</div>
@@ -139,7 +144,6 @@ export default function StartPage() {
           </div>
         )}
 
-        {/* Formularz Email (Admin/Superuser) */}
         {(view === "admin" || view === "superuser") && (
           <div className="w-full max-w-md bg-zinc-900/80 p-10 rounded-[3rem] border border-zinc-800 backdrop-blur-md">
             <button onClick={resetToChoice} className="text-zinc-500 mb-6 uppercase text-[10px] hover:text-white transition-colors">← Powrót</button>
@@ -155,7 +159,6 @@ export default function StartPage() {
           </div>
         )}
 
-        {/* Formularz PIN (Operator) - POPRAWIONY */}
         {view === "operator" && (
           <div className="w-full max-w-md bg-zinc-900/80 p-10 rounded-[3rem] border border-zinc-800 backdrop-blur-md">
             <button onClick={resetToChoice} className="text-zinc-500 mb-6 uppercase text-[10px] hover:text-white transition-colors">← Powrót</button>
@@ -166,7 +169,7 @@ export default function StartPage() {
                 placeholder="IMIĘ (np. Adam)" 
                 className="w-full bg-black/50 border border-zinc-800 p-4 rounded-2xl outline-none focus:border-amber-500 font-bold transition-all" 
                 value={name} 
-                onChange={e => setName(e.target.value)} // USUNIĘTO .toUpperCase()
+                onChange={e => setName(e.target.value)}
                 required 
               />
               <input 

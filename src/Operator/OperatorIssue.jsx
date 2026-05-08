@@ -1,169 +1,357 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useElevator } from "../context/ElevatorContext";
-import { updateDoc, doc } from "firebase/firestore";
+import {
+  updateDoc,
+  doc,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  collection
+} from "firebase/firestore";
 import { db } from "../firebase";
-import "./OperatorsPanel.css";
+
+const OBJECTS = ["Młyn", "Płatkarnia", "Kaszarnia", "Zewnętrzne"];
 
 export default function OperatorIssue() {
-  const { cells, operator, confirmUnload, grainDefinitions } = useElevator();
-  const [grain, setGrain] = useState("");
-  const [selectedCells, setSelectedCells] = useState([]);
-  const [weights, setWeights] = useState({});
+  const { cells, operator, confirmUnload } = useElevator();
+
+  const [selectedObject, setSelectedObject] = useState("Młyn");
+  const [programs, setPrograms] = useState([]);
+  const [pendingIssues, setPendingIssues] = useState([]);
+
+  const [selectedProgramId, setSelectedProgramId] = useState("");
+  const [amount, setAmount] = useState("");
   const [docNumber, setDocNumber] = useState("");
 
-  const grainList = Object.keys(grainDefinitions || {});
+  // Programy wydań (wszystkie)
+  useEffect(() => {
+    const unsub = onSnapshot(collection(db, "releasePrograms"), (snap) => {
+      setPrograms(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+    return () => unsub();
+  }, []);
 
-  const grainCells = useMemo(() => {
-    if (!grain) return [];
-    return cells.filter((c) => 
-      String(c.grain || "").toLowerCase() === String(grain).toLowerCase() && 
-      Number(c.waga || 0) > 0
-    );
-  }, [cells, grain]);
+  // Trwające wydania (wszystkie)
+  useEffect(() => {
+    const unsub = onSnapshot(collection(db, "pendingIssues"), (snap) => {
+      setPendingIssues(
+        snap.docs.map((d) => ({ firestoreId: d.id, ...d.data() }))
+      );
+    });
+    return () => unsub();
+  }, []);
 
-  const totalIssued = Object.values(weights).reduce((sum, v) => sum + (Number(v) || 0), 0);
+  // Programy dla wybranego obiektu
+  const objectPrograms = useMemo(
+    () => programs.filter((p) => p.object === selectedObject),
+    [programs, selectedObject]
+  );
 
-  const canConfirm = grain && selectedCells.length > 0 && totalIssued > 0;
+  // Wybrany program
+  const selectedProgram = useMemo(
+    () => objectPrograms.find((p) => p.id === selectedProgramId) || null,
+    [objectPrograms, selectedProgramId]
+  );
 
-  const confirm = async () => {
-    if (!canConfirm) return alert("Uzupełnij dane wydania.");
+  // Komory z programu + aktualna waga
+  const programCells = useMemo(() => {
+    if (!selectedProgram) return [];
+    return selectedProgram.cells.map((pc) => {
+      const cell = cells.find((c) => c.id === pc.id);
+      return {
+        id: pc.id,
+        percent: pc.percent,
+        waga: cell?.waga ?? 0
+      };
+    });
+  }, [selectedProgram, cells]);
 
-    if (!window.confirm(`Potwierdzasz wydanie ${totalIssued}t zboża ${grain}?`)) return;
+  // Wyliczenie ile pobrać z każdej komory
+  const calculated = useMemo(() => {
+    if (!selectedProgram) return [];
+    if (!amount) return programCells.map((c) => ({ ...c, toTake: 0 }));
+    return programCells.map((c) => ({
+      ...c,
+      toTake: (Number(amount) * c.percent) / 100
+    }));
+  }, [amount, selectedProgram, programCells]);
 
-    try {
-      // PRACUJEMY NA KOPII SELECTED CELLS
-      for (const rawId of selectedCells) {
-        // Czyścimy ID na wypadek spacji lub różnicy wielkości liter
-        const cellId = String(rawId).trim();
-        const cellData = cells.find(c => String(c.id).trim() === cellId);
+  const totalIssued = calculated.reduce((s, c) => s + c.toTake, 0);
+  const canStart =
+    !!selectedObject &&
+    !!selectedProgram &&
+    Number(amount) > 0 &&
+    totalIssued > 0;
 
-        if (!cellData) {
-          console.error(`Nie znaleziono danych dla komory: ${cellId}`);
-          continue; 
-        }
+  // Rozpoczęcie wydania
+  const startIssue = async () => {
+    if (!canStart) return alert("Uzupełnij dane wydania i wybierz program.");
 
-        const issueVal = Number(weights[cellId] || 0);
-        const currentVal = Number(cellData.waga || 0);
-        const finalVal = Math.max(0, currentVal - issueVal);
+    await addDoc(collection(db, "pendingIssues"), {
+      object: selectedObject,
+      programId: selectedProgram.id,
+      grain: selectedProgram.grain,
+      totalAmount: Number(amount),
+      program: calculated,
+      operator: operator?.name || "operator",
+      docNumber: docNumber || null,
+      startedAt: Date.now(),
+      status: "in-progress"
+    });
 
-        console.log(`PROCES: Komora ${cellId} | ${currentVal}t -> ${finalVal}t`);
-
-        // REFERENCJA DO FIRESTORE
-        const cellRef = doc(db, "cells", cellId);
-
-        const updatePayload = {
-          waga: Number(finalVal.toFixed(2)),
-          updatedAt: Date.now()
-        };
-
-        // Reset komory jeśli pusta
-        if (finalVal <= 0) {
-          updatePayload.grain = null;
-          updatePayload.groupId = null;
-          updatePayload.firstFill = null;
-          updatePayload.firstFillDate = null;
-          console.log(`KOMORA ${cellId} ZOSTANIE WYCZYSZCZONA`);
-        }
-
-        // --- KLUCZOWY MOMENT: ZAPIS ---
-        await updateDoc(cellRef, updatePayload);
-        
-        // REJESTRACJA W LOGACH
-        await confirmUnload({
-          id: `WZ-${Date.now()}-${cellId}`,
-          grain,
-          amount: issueVal,
-          cell: cellId,
-          operator: operator?.name || "operator",
-        });
-      }
-
-      alert("✔ Baza danych została zaktualizowana pomyślnie.");
-      
-      // RESET FORMULARZA
-      setGrain("");
-      setSelectedCells([]);
-      setWeights({});
-      setDocNumber("");
-
-    } catch (err) {
-      console.error("BŁĄD PODCZAS AKTUALIZACJI:", err);
-      alert("Wystąpił błąd zapisu do bazy. Sprawdź konsolę.");
-    }
+    alert("Wydanie rozpoczęte.");
+    setAmount("");
+    setDocNumber("");
   };
 
+  // Zakończenie wydania
+  const finishIssue = async (issue) => {
+    if (!window.confirm("Zakończyć wydanie?")) return;
+
+    for (const c of issue.program) {
+      const cellRef = doc(db, "cells", c.id);
+      const cell = cells.find((x) => x.id === c.id);
+
+      const finalVal = Math.max(0, (cell?.waga || 0) - c.toTake);
+
+      const updatePayload = {
+        waga: Number(finalVal.toFixed(2)),
+        updatedAt: Date.now()
+      };
+
+      if (finalVal <= 0) {
+        updatePayload.grain = null;
+        updatePayload.groupId = null;
+        updatePayload.firstFill = null;
+        updatePayload.firstFillDate = null;
+      }
+
+      await updateDoc(cellRef, updatePayload);
+
+      await confirmUnload({
+        id: `WZ-${Date.now()}-${c.id}`,
+        grain: issue.grain,
+        amount: c.toTake,
+        cell: c.id,
+        operator: issue.operator,
+        docNumber: issue.docNumber || null
+      });
+    }
+
+    await deleteDoc(doc(db, "pendingIssues", issue.firestoreId));
+
+    alert("Wydanie zakończone.");
+  };
+
+  const pendingForObject = pendingIssues.filter(
+    (i) => i.object === selectedObject
+  );
+
   return (
-    <div style={{ padding: 20, color: "white", maxWidth: 800, margin: "auto" }}>
-      <h2 style={{ color: "#3b82f6", marginBottom: 20 }}>Panel Wydania Towaru</h2>
-      
-      <div style={{ marginBottom: 20 }}>
-        <label>Wybierz rodzaj zboża:</label>
-        <select 
-          value={grain} 
-          onChange={(e) => { setGrain(e.target.value); setSelectedCells([]); setWeights({}); }}
-          style={{ width: "100%", padding: 12, marginTop: 10, background: "#1e293b", color: "white", borderRadius: 8, border: "1px solid #475569" }}
-        >
-          <option value="">-- wybierz --</option>
-          {grainList.map(g => <option key={g} value={g}>{g}</option>)}
-        </select>
-      </div>
+    <div style={{ padding: 20, color: "white", maxWidth: 1000, margin: "auto" }}>
+      <h2 style={{ color: "#3b82f6" }}>Wydania — {selectedObject}</h2>
 
-      {grain && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: 10 }}>
-          {grainCells.map(c => (
-            <div 
-              key={c.id} 
-              onClick={() => setSelectedCells(prev => prev.includes(c.id) ? prev.filter(x => x !== c.id) : [...prev, c.id])}
-              style={{
-                padding: "15px 10px", borderRadius: 10, cursor: "pointer", textAlign: "center",
-                background: selectedCells.includes(c.id) ? "#2563eb" : "#334155",
-                border: selectedCells.includes(c.id) ? "2px solid #fff" : "1px solid #475569",
-                transition: "0.2s"
-              }}
-            >
-              <div style={{ fontSize: 18, fontWeight: "bold" }}>{c.id}</div>
-              <div style={{ fontSize: 12, opacity: 0.9 }}>{c.waga} t</div>
-            </div>
-          ))}
-          {grainCells.length === 0 && <p style={{ gridColumn: "1/-1", textAlign: "center", opacity: 0.7 }}>Brak komór z tym ziarnem.</p>}
-        </div>
-      )}
-
-      {selectedCells.length > 0 && (
-        <div style={{ marginTop: 30, background: "#1e293b", padding: 20, borderRadius: 15, boxShadow: "0 4px 6px rgba(0,0,0,0.3)" }}>
-          <h3 style={{ marginTop: 0 }}>Wprowadź wagi wydań:</h3>
-          {selectedCells.map(id => (
-            <div key={id} style={{ marginBottom: 15 }}>
-              <label style={{ fontSize: 14 }}>Komora <b>{id}</b> (tony):</label>
-              <input 
-                type="number" 
-                value={weights[id] || ""} 
-                onChange={e => setWeights(prev => ({...prev, [id]: e.target.value}))}
-                style={{ width: "100%", padding: 12, marginTop: 5, background: "#0f172a", color: "white", border: "1px solid #334155", borderRadius: 8 }}
-                placeholder={`Dostępne: ${cells.find(c => c.id === id)?.waga}t`}
-              />
-            </div>
-          ))}
-          
-          <input 
-            placeholder="Numer dokumentu WZ (opcjonalnie)" 
-            value={docNumber} 
-            onChange={e => setDocNumber(e.target.value)}
-            style={{ width: "100%", padding: 12, marginBottom: 20, background: "#0f172a", color: "white", border: "1px solid #334155", borderRadius: 8 }}
-          />
-
-          <button 
-            onClick={confirm} 
-            disabled={!canConfirm}
-            style={{ 
-              width: "100%", padding: 18, borderRadius: 10, fontSize: 18, fontWeight: "bold",
-              background: canConfirm ? "#10b981" : "#475569", color: "white", border: "none", cursor: canConfirm ? "pointer" : "not-allowed"
+      {/* WYBÓR OBIEKTU */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+        {OBJECTS.map((obj) => (
+          <button
+            key={obj}
+            onClick={() => {
+              setSelectedObject(obj);
+              setSelectedProgramId("");
+              setAmount("");
+            }}
+            style={{
+              padding: "8px 14px",
+              borderRadius: 8,
+              border: "none",
+              cursor: "pointer",
+              background:
+                selectedObject === obj ? "#3b82f6" : "#1e293b",
+              color: "white",
+              fontWeight: selectedObject === obj ? "bold" : "normal"
             }}
           >
-            WYDAJ ŁĄCZNIE {totalIssued.toFixed(2)} t
+            {obj}
+          </button>
+        ))}
+      </div>
+
+      {/* LISTA PROGRAMÓW DLA OBIEKTU */}
+      <div
+        style={{
+          marginBottom: 30,
+          padding: 20,
+          background: "#020617",
+          borderRadius: 12
+        }}
+      >
+        <h3>Programy wydań dla: {selectedObject}</h3>
+
+        {objectPrograms.length === 0 && (
+          <p style={{ opacity: 0.7 }}>Brak zdefiniowanych programów wydań.</p>
+        )}
+
+        {objectPrograms.map((p) => (
+          <div
+            key={p.id}
+            onClick={() => setSelectedProgramId(p.id)}
+            style={{
+              padding: 10,
+              marginBottom: 8,
+              borderRadius: 8,
+              cursor: "pointer",
+              background:
+                selectedProgramId === p.id ? "#1d4ed8" : "#1e293b",
+              border:
+                selectedProgramId === p.id
+                  ? "1px solid #ffffff"
+                  : "1px solid #334155"
+            }}
+          >
+            <div>
+              <b>{p.grain}</b>
+            </div>
+            <div style={{ fontSize: 13, opacity: 0.9 }}>
+              {p.cells.map((c) => (
+                <span key={c.id} style={{ marginRight: 8 }}>
+                  {c.id}: {c.percent}%
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ROZPOCZĘCIE NOWEGO WYDANIA */}
+      {selectedProgram && (
+        <div
+          style={{
+            marginBottom: 30,
+            padding: 20,
+            background: "#1e293b",
+            borderRadius: 12
+          }}
+        >
+          <h3>Rozpocznij nowe wydanie ({selectedProgram.grain})</h3>
+
+          <label>Ilość do wydania (t):</label>
+          <input
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            style={{
+              width: "100%",
+              padding: 12,
+              marginTop: 10,
+              background: "#0f172a",
+              color: "white",
+              borderRadius: 8,
+              border: "1px solid #334155"
+            }}
+          />
+
+          <label style={{ marginTop: 15, display: "block" }}>
+            Numer dokumentu WZ (opcjonalnie):
+          </label>
+          <input
+            value={docNumber}
+            onChange={(e) => setDocNumber(e.target.value)}
+            style={{
+              width: "100%",
+              padding: 12,
+              marginTop: 10,
+              background: "#0f172a",
+              color: "white",
+              borderRadius: 8,
+              border: "1px solid #334155"
+            }}
+          />
+
+          <h4 style={{ marginTop: 20 }}>Rozdział na komory:</h4>
+          {calculated.map((c) => (
+            <div key={c.id} style={{ fontSize: 14 }}>
+              {c.id}: {c.toTake.toFixed(2)} t ({c.percent}%) — dostępne:{" "}
+              {c.waga} t
+            </div>
+          ))}
+
+          <button
+            onClick={startIssue}
+            disabled={!canStart}
+            style={{
+              width: "100%",
+              padding: 18,
+              marginTop: 20,
+              background: canStart ? "#10b981" : "#475569",
+              borderRadius: 10,
+              fontSize: 18,
+              fontWeight: "bold",
+              color: "white",
+              border: "none",
+              cursor: canStart ? "pointer" : "not-allowed"
+            }}
+          >
+            ROZPOCZNIJ WYDANIE ({totalIssued.toFixed(2)} t)
           </button>
         </div>
       )}
+
+      {/* LISTA TRWAJĄCYCH WYDAŃ DLA OBIEKTU */}
+      <h3>Trwające wydania — {selectedObject}</h3>
+
+      {pendingForObject.length === 0 && (
+        <p style={{ opacity: 0.7 }}>Brak aktywnych wydań.</p>
+      )}
+
+      {pendingForObject.map((issue) => (
+        <div
+          key={issue.firestoreId}
+          style={{
+            background: "#1e293b",
+            padding: 20,
+            borderRadius: 12,
+            marginBottom: 15
+          }}
+        >
+          <div>
+            <b>Zboże:</b> {issue.grain}
+          </div>
+          <div>
+            <b>Ilość:</b> {issue.totalAmount} t
+          </div>
+          <div>
+            <b>Operator:</b> {issue.operator}
+          </div>
+          <div>
+            <b>Dokument:</b> {issue.docNumber || "-"}
+          </div>
+
+          <h4 style={{ marginTop: 10 }}>Rozdział:</h4>
+          {issue.program.map((c) => (
+            <div key={c.id}>
+              {c.id}: {c.toTake.toFixed(2)} t ({c.percent}%)
+            </div>
+          ))}
+
+          <button
+            onClick={() => finishIssue(issue)}
+            style={{
+              marginTop: 15,
+              width: "100%",
+              padding: 14,
+              background: "#ef4444",
+              borderRadius: 10,
+              color: "white",
+              fontWeight: "bold",
+              border: "none",
+              cursor: "pointer"
+            }}
+          >
+            ZAKOŃCZ WYDANIE
+          </button>
+        </div>
+      ))}
     </div>
   );
 }

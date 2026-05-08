@@ -11,6 +11,7 @@ import AdminCorrections from "./AdminCorrections";
 import OperatorsPanel from "./OperatorsPanel";
 import OperatorLive from "../Operator/OperatorLive"; 
 import SuperUserPanel from "./SuperUserPanel"; 
+import AdminReleasePrograms from "./AdminReleasePrograms";
 
 // UŻYTKOWNICY & NOWY MANAGER UPRAWNIEŃ
 import UsersAdmin from "./UsersAdmin";
@@ -82,6 +83,7 @@ export default function AdminRoutes() {
         <Route path="transfers" element={<TransfersPanel />} />
         <Route path="corrections" element={<AdminCorrections />} />
         <Route path="history" element={<AdminHistory />} />
+        <Route path="release-programs" element={<AdminReleasePrograms />} />
 
         {/* CENTRUM RAPORTOWE */}
         <Route path="reports">

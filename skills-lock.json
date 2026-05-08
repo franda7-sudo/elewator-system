@@ -58,7 +58,7 @@
       "source": "firebase/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/firebase-crashlytics/SKILL.md",
-      "computedHash": "516107bf025c38a3d374db5345aee0c082ef594591d77e022bd342203111a716"
+      "computedHash": "e40f0b599853b0512d023306b23bfbcc39c911ff61d5f0f084cab2bce234480a"
     },
     "firebase-data-connect": {
       "source": "firebase/agent-skills",
