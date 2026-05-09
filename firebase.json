@@ -2,7 +2,6 @@
   "functions": [
     {
       "codebase": "elewator-system",
-      "source": "elewator-system",
       "disallowLegacyRuntimeConfig": true,
       "ignore": [
         "node_modules",
@@ -10,6 +9,10 @@
         "firebase-debug.log",
         "firebase-debug.*.log",
         "*.local"
+      ],
+      "source": "elewator-system",
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
       ]
     }
   ],
@@ -17,6 +20,17 @@
     {
       "backendId": "elewator-gms",
       "rootDir": "/"
+    },
+    {
+      "backendId": "elewator-gms",
+      "rootDir": "/",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "functions"
+      ]
     },
     {
       "backendId": "elewator-gms",

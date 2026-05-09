@@ -1,30 +1,391 @@
-.btn-superuser {
+/* =========================================
+   START PAGE — FULLSCREEN PRO LAYOUT
+========================================= */
+
+html,
+body,
+#root {
   width: 100%;
-  padding: 20px;
-  margin-bottom: 15px;
-  background: linear-gradient(45deg, #fbbf24, #f59e0b);
-  color: black;
-  border: none;
-  border-radius: 12px;
-  font-weight: 900;
-  cursor: pointer;
-  transition: transform 0.2s;
-  letter-spacing: 1px;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: #000;
 }
 
-.btn-superuser:hover {
-  transform: scale(1.02);
-  filter: brightness(1.1);
-}
-
-.btn-admin {
-  background: #27272a; /* Ciemniejszy dla odróżnienia */
+body {
+  font-family: Inter, system-ui, sans-serif;
   color: white;
-  border: 1px solid #3f3f46;
 }
 
-.btn-operator {
-  background: transparent;
-  color: #fbbf24;
-  border: 2px solid #fbbf24;
+/* =========================================
+   GLOBAL FIX
+========================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+/* =========================================
+   MAIN CONTAINER
+========================================= */
+
+.start-page-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* =========================================
+   HERO SECTION
+========================================= */
+
+.start-page-hero {
+  width: 100%;
+  max-width: 2200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 50px;
+  padding: 20px clamp(20px, 4vw, 80px) 60px;
+}
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.start-page-left {
+  width: 100%;
+  max-width: 2100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 0;
+}
+
+/* =========================================
+   HUGE TITLE — DESKTOP
+========================================= */
+
+.start-page-left h1 {
+  margin: 0 0 40px 0 !important;
+  font-size: clamp(72px, 8vw, 150px) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.03em !important;
+  font-weight: 800;
+  filter: drop-shadow(0 0 35px rgba(255,255,255,0.08));
+}
+
+/* =========================================
+   SUBTITLE — DESKTOP
+========================================= */
+
+.start-page-left .subtitle {
+  margin-top: 10px;
+  font-size: clamp(20px, 2.2vw, 32px);
+  line-height: 1.35;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+}
+
+/* =========================================
+   TEXT — DESKTOP
+========================================= */
+
+.start-page-left p {
+  text-align: center;
+  font-size: clamp(18px, 1.4vw, 24px);
+  line-height: 1.55;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* =========================================
+   RIGHT SIDE
+========================================= */
+
+.start-page-right {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =========================================
+   LOGIN PANEL
+========================================= */
+
+.login-panel {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.start-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px clamp(20px, 4vw, 60px);
+  position: relative;
+  z-index: 20;
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.start-footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+/* =========================================
+   BUTTON EFFECTS
+========================================= */
+
+.login-panel button {
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
+}
+
+.login-panel button:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   INPUT EFFECTS
+========================================= */
+
+.login-panel input {
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.login-panel input:focus {
+  box-shadow:
+    0 0 0 1px rgba(251, 191, 36, 0.3),
+    0 0 30px rgba(251, 191, 36, 0.08);
+}
+
+/* =========================================
+   PREMIUM GLASS EFFECT
+========================================= */
+
+.login-panel > div {
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.05),
+    rgba(255,255,255,0.025)
+  );
+  backdrop-filter: blur(28px);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+/* =========================================
+   RESPONSIVE — TABLET
+========================================= */
+
+@media (max-width: 1200px) {
+  .start-page-hero {
+    gap: 40px;
+    padding: 25px 25px 50px;
+  }
+
+  .start-page-left h1 {
+    line-height: 1.05 !important;
+  }
+}
+
+/* =========================================
+   RESPONSIVE — MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+  .start-page-hero {
+    padding: 20px 18px 50px;
+    gap: 35px;
+  }
+
+  .start-header {
+    padding: 18px 18px;
+  }
+
+  .start-page-left h1 {
+    font-size: clamp(58px, 18vw, 110px) !important;
+    line-height: 1.02 !important;
+    margin-bottom: 25px !important;
+  }
+
+  .start-page-left .subtitle {
+    font-size: clamp(16px, 4vw, 22px);
+    letter-spacing: 0.08em;
+  }
+
+  .start-page-left p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .login-panel button {
+    height: 72px !important;
+    font-size: 15px !important;
+  }
+}
+
+/* =========================================
+   ULTRAWIDE FIX
+========================================= */
+
+@media (min-width: 1800px) {
+  .start-page-hero {
+    max-width: 2400px;
+  }
+
+  .start-page-left {
+    max-width: 2300px;
+  }
+}
+
+/* =========================================
+   FADE-IN ANIMATION
+========================================= */
+
+.fade-in {
+  animation: fadeIn 0.9s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   INDUSTRIAL FRAME
+========================================= */
+
+.industrial-frame {
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow:
+    0 0 20px rgba(0,0,0,0.6),
+    inset 0 0 12px rgba(255,255,255,0.05);
+}
+
+/* =========================================
+   SCADA PREMIUM — COMPANY LABEL
+========================================= */
+
+.company-label {
+  color: #fef9c3 !important;
+  text-shadow:
+    0 0 12px rgba(190, 242, 100, 0.55),
+    0 0 28px rgba(190, 242, 100, 0.45),
+    0 0 48px rgba(190, 242, 100, 0.35);
+}
+
+/* =========================================
+   SCADA PREMIUM — BRUSHED METAL GREEN ELEWATOR
+========================================= */
+
+.scada-title {
+  /* metaliczny zielony gradient */
+  background: linear-gradient(
+    180deg,
+    #e5fff1 0%,
+    #b8f8d5 18%,
+    #7ef2b3 35%,
+    #3dd68c 55%,
+    #1f8f55 78%,
+    #0f5a34 100%
+  );
+  -webkit-background-clip: text;
+  color: transparent;
+
+  /* efekt szczotkowanego aluminium (delikatny „szum”) */
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.35) 0%,
+      transparent 40%,
+      rgba(0,0,0,0.35) 100%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.18) 0px,
+      rgba(255,255,255,0.18) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+
+  /* 3D + emboss */
+  text-shadow:
+    0px 2px 0px rgba(0, 0, 0, 0.45),
+    0px 4px 0px rgba(0, 0, 0, 0.35),
+    0px 6px 12px rgba(0, 0, 0, 0.55),
+    0 0 18px rgba(74, 222, 128, 0.55),
+    0 0 36px rgba(74, 222, 128, 0.45),
+    0 0 70px rgba(74, 222, 128, 0.35);
+}
+
+/* Pasek pod ELEWATOR — brushed metal green */
+.scada-title::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 6px;
+  margin-top: 12px;
+
+  background: linear-gradient(
+    90deg,
+    rgba(74, 222, 128, 1),
+    rgba(190, 242, 100, 1)
+  );
+
+  border-radius: 4px;
+
+  box-shadow:
+    0 0 14px rgba(74, 222, 128, 0.6),
+    0 0 28px rgba(190, 242, 100, 0.4);
+}
+
+/* =========================================
+   SCADA PREMIUM — SUBTITLE GLOW
+========================================= */
+
+.start-page-left .subtitle {
+  color: #bbf7d0 !important;
+  text-shadow:
+    0 0 10px rgba(74, 222, 128, 0.45),
+    0 0 22px rgba(74, 222, 128, 0.35);
 }

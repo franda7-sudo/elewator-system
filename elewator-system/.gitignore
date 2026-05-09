@@ -1,6 +1,2 @@
 node_modules/
-*.localbuild/
-.agents/
-.adal/
-.codebuddy/
-.continue/
+*.local

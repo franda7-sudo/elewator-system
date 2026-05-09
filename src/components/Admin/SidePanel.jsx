@@ -12,7 +12,7 @@ export default function SidePanel({
   const [waga, setWaga] = useState(cell.waga || 0);
   const [capacity, setCapacity] = useState(cell.capacity || 0);
   const [firstFill, setFirstFill] = useState(cell.firstFill || "");
-  const [groupId, setGroupId] = useState(cell.groupId || "");
+  const [qualityGroupId, setQualityGroupId] = useState(cell.qualityGroupId || "");
   const [special, setSpecial] = useState(!!cell.special);
   const [blocked, setBlocked] = useState(!!cell.blocked);
 
@@ -26,12 +26,19 @@ export default function SidePanel({
     }
   }, [cell.id, cell.capacity]);
 
+  // Lista grup jakości dla wybranego ziarna
+  const availableGroups = useMemo(() => {
+    if (!grain || !qualityConfig[grain]) return [];
+    return Object.values(qualityConfig[grain].groups || {});
+  }, [grain, qualityConfig]);
+
   const handleSaveClick = () => {
     const newWaga = Number(waga);
     const maxCap = Number(capacity);
     const freeSpace = maxCap - newWaga;
 
-    if (!firstFill.trim()) {
+    // Jeśli komora ma ziarno, musi mieć datę pierwszego zasypu
+    if (grain && !firstFill.trim()) {
       alert("Data pierwszego zasypu jest obowiązkowa.");
       return;
     }
@@ -50,11 +57,11 @@ export default function SidePanel({
 
     onSave({
       ...cell,
-      grain,
+      grain: grain || null,
       waga: newWaga,
       capacity: maxCap,
-      firstFill,
-      groupId,
+      firstFill: grain ? firstFill : null,
+      qualityGroupId: qualityGroupId || null,
       special,
       blocked,
       updatedAt: Date.now()
@@ -68,13 +75,32 @@ export default function SidePanel({
       <h3>Komora {cell.id}</h3>
 
       <label>Zboże:
-        <select value={grain} onChange={(e) => setGrain(e.target.value)}>
+        <select value={grain} onChange={(e) => {
+          setGrain(e.target.value);
+          setQualityGroupId(""); // reset grupy przy zmianie ziarna
+        }}>
           <option value="">— wybierz —</option>
           {Object.keys(grainDefinitions).map((g) => (
             <option key={g} value={g}>{g}</option>
           ))}
         </select>
       </label>
+
+      {grain && (
+        <label>Grupa jakości:
+          <select
+            value={qualityGroupId}
+            onChange={(e) => setQualityGroupId(e.target.value)}
+          >
+            <option value="">— brak —</option>
+            {availableGroups.map((g) => (
+              <option key={g.id} value={g.id}>
+                {g.id}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
 
       <label>Waga (t):
         <input type="number" value={waga} onChange={(e) => setWaga(e.target.value)} />

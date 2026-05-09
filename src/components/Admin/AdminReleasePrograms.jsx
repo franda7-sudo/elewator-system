@@ -19,6 +19,7 @@ export default function AdminReleasePrograms() {
   const [grainList, setGrainList] = useState([]);
   const [selectedCells, setSelectedCells] = useState([]);
   const [percentages, setPercentages] = useState({});
+  const [percentSum, setPercentSum] = useState(0);
   const [programs, setPrograms] = useState([]);
 
   const [editId, setEditId] = useState(null);
@@ -37,7 +38,47 @@ export default function AdminReleasePrograms() {
     return () => unsub();
   }, []);
 
-  // 🔵 Wczytanie programu do edycji
+  // SUMOWANIE %
+  useEffect(() => {
+    const sum = Object.values(percentages).reduce(
+      (a, b) => a + Number(b || 0),
+      0
+    );
+    setPercentSum(sum);
+  }, [percentages]);
+
+  // AUTO‑WYRÓWNANIE DO 100%
+  const autoAdjustPercentages = (changedId, value) => {
+    const ids = selectedCells.map(c => c.id);
+
+    if (ids.length < 2) {
+      setPercentages({ [changedId]: 100 });
+      return;
+    }
+
+    const lastId = ids[ids.length - 1];
+
+    if (changedId === lastId) {
+      setPercentages(prev => ({ ...prev, [changedId]: value }));
+      return;
+    }
+
+    const others = ids.filter(id => id !== lastId);
+    const sumOthers = others.reduce(
+      (acc, id) => acc + Number(id === changedId ? value : percentages[id] || 0),
+      0
+    );
+
+    const lastValue = Math.max(0, 100 - sumOthers);
+
+    setPercentages(prev => ({
+      ...prev,
+      [changedId]: value,
+      [lastId]: lastValue
+    }));
+  };
+
+  // Wczytanie programu do edycji
   const startEdit = (program) => {
     setEditId(program.id);
     setEditOriginal(program);
@@ -52,7 +93,7 @@ export default function AdminReleasePrograms() {
     );
   };
 
-  // 🔵 Reset formularza
+  // Reset formularza
   const resetForm = () => {
     setEditId(null);
     setEditOriginal(null);
@@ -62,20 +103,16 @@ export default function AdminReleasePrograms() {
     setPercentages({});
   };
 
-  // 🔵 Walidacja procentów
+  // Walidacja
   const validatePercentages = () => {
-    const total = Object.values(percentages).reduce(
-      (a, b) => a + Number(b || 0),
-      0
-    );
-    if (total !== 100) {
+    if (percentSum !== 100) {
       alert("Suma udziałów musi wynosić 100%");
       return false;
     }
     return true;
   };
 
-  // 🔵 Zapis nowego programu
+  // Zapis nowego programu
   const saveNewProgram = async () => {
     if (!selectedObject) return alert("Wybierz obiekt.");
     if (!grain) return alert("Wybierz zboże.");
@@ -96,7 +133,7 @@ export default function AdminReleasePrograms() {
     resetForm();
   };
 
-  // 🔵 Zapis edytowanego programu
+  // Zapis edytowanego programu
   const saveEditedProgram = async () => {
     if (!validatePercentages()) return;
 
@@ -117,13 +154,13 @@ export default function AdminReleasePrograms() {
     resetForm();
   };
 
-  // 🔵 Usuwanie programu
+  // Usuwanie programu
   const deleteProgram = async (id) => {
     if (!window.confirm("Usunąć program?")) return;
     await deleteDoc(doc(db, "releasePrograms", id));
   };
 
-  // 🔵 Komory dla wybranego zboża
+  // Komory dla wybranego zboża
   const filteredCells = cells.filter((c) => {
     if (!grain) return false;
     return String(c.grain || "").toLowerCase() === grain.toLowerCase();
@@ -200,23 +237,45 @@ export default function AdminReleasePrograms() {
                 min="0"
                 max="100"
                 value={percentages[cell.id] || ""}
-                onChange={(e) =>
-                  setPercentages({
-                    ...percentages,
-                    [cell.id]: e.target.value
-                  })
-                }
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  autoAdjustPercentages(cell.id, val);
+                }}
               />
               <span>%</span>
             </div>
           ))}
 
+          {/* SUMA */}
+          <div className="percent-summary">
+            <strong>Suma udziałów:</strong> {percentSum}%
+            {percentSum !== 100 && (
+              <span style={{ color: "orange", marginLeft: 10 }}>
+                (suma ≠ 100%)
+              </span>
+            )}
+            {percentSum === 100 && (
+              <span style={{ color: "lightgreen", marginLeft: 10 }}>
+                ✔ OK
+              </span>
+            )}
+          </div>
+
+          {/* PRZYCISKI */}
           {editId ? (
-            <button className="save-btn" onClick={saveEditedProgram}>
+            <button
+              className="save-btn"
+              disabled={percentSum !== 100}
+              onClick={saveEditedProgram}
+            >
               Zapisz zmiany
             </button>
           ) : (
-            <button className="save-btn" onClick={saveNewProgram}>
+            <button
+              className="save-btn"
+              disabled={percentSum !== 100}
+              onClick={saveNewProgram}
+            >
               Dodaj program
             </button>
           )}

@@ -1,96 +1,125 @@
 const { onCall, HttpsError } = require("firebase-functions/v2/https");
-const { auth } = require("firebase-functions/v1"); // Importujemy v1 bezpośrednio dla triggera Auth
+const { onUserCreated } = require("firebase-functions/v2/auth");
+const { onDocumentWritten } = require("firebase-functions/v2/firestore");
 const admin = require("firebase-admin");
 
-// Inicjalizacja SDK Admina
 admin.initializeApp();
 
 // ============================================================
-// 1. USTAWIANIE ROLI UŻYTKOWNIKA (Callable Function v2)
+// 1. Nadawanie roli użytkownikowi (v2)
 // ============================================================
 exports.setUserRole = onCall(async (request) => {
   if (!request.auth) {
-    throw new HttpsError(
-      "unauthenticated",
-      "Musisz być zalogowany, aby wykonać tę operację."
-    );
+    throw new HttpsError("unauthenticated", "Musisz być zalogowany.");
   }
 
-  try {
-    const callerUid = request.auth.uid;
-    const caller = await admin.auth().getUser(callerUid);
-    const callerRole = caller.customClaims?.role;
+  const callerUid = request.auth.uid;
+  const caller = await admin.auth().getUser(callerUid);
+  const callerRole = caller.customClaims?.role;
 
-    const allowedRoles = ["admin", "owner", "superuser"];
-    if (!callerRole || !allowedRoles.includes(callerRole)) {
-      throw new HttpsError(
-        "permission-denied",
-        "Nie masz wystarczających uprawnień."
-      );
-    }
-
-    const { uid, role } = request.data;
-    if (!uid || !role) {
-      throw new HttpsError(
-        "invalid-argument",
-        "Brakujące parametry: 'uid' i 'role'."
-      );
-    }
-
-    await admin.auth().setCustomUserClaims(uid, { role: role });
-
-    await admin.firestore().collection("users").doc(uid).set({
-      role: role,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
-    }, { merge: true });
-
-    return { message: `Rola ${role} została nadana.`, success: true };
-
-  } catch (error) {
-    console.error("Błąd w setUserRole:", error);
-    if (error instanceof HttpsError) throw error;
-    throw new HttpsError("internal", "Błąd wewnętrzny serwera.");
+  const allowed = ["admin", "owner", "superuser"];
+  if (!allowed.includes(callerRole)) {
+    throw new HttpsError("permission-denied", "Brak uprawnień.");
   }
+
+  const { uid, role } = request.data;
+  if (!uid || !role) {
+    throw new HttpsError("invalid-argument", "Brak uid lub role.");
+  }
+
+  await admin.auth().setCustomUserClaims(uid, { role });
+  await admin.firestore().collection("users").doc(uid).set({
+    role,
+    updatedAt: admin.firestore.FieldValue.serverTimestamp()
+  }, { merge: true });
+
+  return { success: true };
 });
 
 // ============================================================
-// 2. AUTOMATYCZNY PIERWSZY ADMIN (Auth Trigger v1)
+// 2. Automatyczne tworzenie pierwszego superusera (v2)
 // ============================================================
-// Zmieniliśmy "functions.auth.user()" na "auth.user()" dzięki nowemu importowi
-exports.ensureAdminExists = auth.user().onCreate(async (user) => {
+exports.ensureAdminExists = onUserCreated(async (event) => {
+  const user = event.data;
   const db = admin.firestore();
 
-  try {
-    const adminsSnapshot = await db.collection("users")
-      .where("role", "in", ["admin", "owner", "superuser"])
-      .limit(1)
-      .get();
+  const admins = await db.collection("users")
+    .where("role", "in", ["admin", "owner", "superuser"])
+    .limit(1)
+    .get();
 
-    if (adminsSnapshot.empty) {
-      console.log(`Tworzenie pierwszego Superusera: ${user.uid}`);
-
-      await db.collection("users").doc(user.uid).set({
-        email: user.email || "brak-maila",
-        name: user.email ? user.email.split("@")[0] : "Pierwszy Użytkownik",
-        role: "superuser",
-        active: true,
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      }, { merge: true });
-
-      await admin.auth().setCustomUserClaims(user.uid, { role: "superuser" });
-      return null;
-    }
-
+  if (admins.empty) {
     await db.collection("users").doc(user.uid).set({
       email: user.email || "",
-      role: "user",
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    }, { merge: true });
+      name: user.email ? user.email.split("@")[0] : "Superuser",
+      role: "superuser",
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    });
 
-    return null;
-
-  } catch (error) {
-    console.error("Błąd w ensureAdminExists:", error);
-    return null;
+    await admin.auth().setCustomUserClaims(user.uid, { role: "superuser" });
+    return;
   }
+
+  await db.collection("users").doc(user.uid).set({
+    email: user.email || "",
+    role: "user",
+    createdAt: admin.firestore.FieldValue.serverTimestamp()
+  }, { merge: true });
+});
+
+// ============================================================
+// 3. Logowanie prób wejścia (v2)
+// ============================================================
+exports.logSecurityEvent = onCall(async (request) => {
+  const { type, ip, details } = request.data;
+
+  await admin.firestore().collection("ownerLogs").add({
+    type,
+    ip,
+    details,
+    timestamp: Date.now()
+  });
+
+  return { success: true };
+});
+
+// ============================================================
+// 4. Blokada systemu (v2)
+// ============================================================
+exports.setSystemLock = onCall(async (request) => {
+  const callerRole = request.auth?.token?.role;
+
+  if (!["owner", "superuser"].includes(callerRole)) {
+    throw new HttpsError("permission-denied", "Brak uprawnień.");
+  }
+
+  const { locked, message } = request.data;
+
+  await admin.firestore().collection("settings").doc("system").set({
+    locked,
+    message,
+    updatedAt: Date.now()
+  }, { merge: true });
+
+  return { success: true };
+});
+
+// ============================================================
+// 5. Reset PIN operatora (v2)
+// ============================================================
+exports.resetOperatorPin = onCall(async (request) => {
+  const callerRole = request.auth?.token?.role;
+
+  if (!["admin", "owner", "superuser"].includes(callerRole)) {
+    throw new HttpsError("permission-denied", "Brak uprawnień.");
+  }
+
+  const { uid, newPin } = request.data;
+
+  await admin.firestore().collection("users").doc(uid).set({
+    pin: newPin,
+    updatedAt: Date.now()
+  }, { merge: true });
+
+  return { success: true };
 });

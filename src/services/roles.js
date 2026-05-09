@@ -1,5 +1,5 @@
 import { httpsCallable } from "firebase/functions";
-import { functions } from "../firebase";
+import { functions } from "../firebase.js";
 
 export async function setUserRole(uid, role) {
   const fn = httpsCallable(functions, "setUserRole");

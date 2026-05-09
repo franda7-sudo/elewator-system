@@ -7,7 +7,6 @@ import {
   updateDoc,
   addDoc,
 } from "firebase/firestore";
-import { LUZ_COEFFICIENTS } from "./luzCoefficients";
 import "./OperatorCorrection.css";
 
 export default function OperatorCorrection() {
@@ -23,14 +22,16 @@ export default function OperatorCorrection() {
     return () => unsub();
   }, []);
 
+  // 🔥 Rozpoznanie typu komory
   const detectCellType = (id) => {
     if (id.endsWith("S")) return "S";
-    if (id.endsWith("N")) return "N";
     if (id.endsWith("G")) return "G";
+    if (id.endsWith("N")) return "N";
     if (id.endsWith("W")) return "W";
     return "S";
   };
 
+  // 🔥 GŁÓWNY ALGORYTM — ILE JEST W KOMORZE
   const handleCalculate = () => {
     if (!cellId || !luz) return;
 
@@ -43,21 +44,50 @@ export default function OperatorCorrection() {
     const type = detectCellType(cellId);
     const grain = cell.grain;
 
-    const coeff =
-      type === "W"
-        ? LUZ_COEFFICIENTS.W[cellId]
-        : LUZ_COEFFICIENTS[type]?.[grain];
+    let wysokosc = 0;
+    let przelicznik = 0;
 
-    if (!coeff) {
-      alert(`Brak współczynnika dla ${type}/${grain}`);
-      return;
+    // ============================
+    // 🔥 KOMORY S i G
+    // ============================
+    if (type === "S" || type === "G") {
+      wysokosc = 24;
+
+      if (grain === "pszenica") przelicznik = 11.5;
+      if (grain === "żyto")     przelicznik = 11;
+      if (grain === "owies")    przelicznik = 8;
+      if (grain === "jęczmień") przelicznik = 10;
+      if (grain === "pellet")   przelicznik = 10;
     }
 
-    // 🔥 KLUCZOWA POPRAWKA — operator liczy od aktualnej wagi, NIE od capacity
-    const currentWeight = cell.waga || 0;
+    // ============================
+    // 🔥 KOMORY N
+    // ============================
+    if (type === "N") {
+      wysokosc = 28;
 
-    const newWeight = currentWeight - Number(luz) * coeff;
-    setCalculatedWeight(Number(newWeight.toFixed(1)));
+      if (grain === "pszenica") przelicznik = 39.5;
+      if (grain === "żyto")     przelicznik = 39;
+    }
+
+    // ============================
+    // 🔥 KOMORY W
+    // ============================
+    if (type === "W") {
+      wysokosc = 24;
+
+      if (cellId === "43W") przelicznik = 4;
+      if (["44W","45W","48W","49W","51W","52W"].includes(cellId)) przelicznik = 2.5;
+      if (["46W","47W","50W"].includes(cellId)) przelicznik = 5;
+    }
+
+    // ============================
+    // 🔥 OBLICZENIA
+    // ============================
+    const zasypanie = wysokosc - Number(luz);
+    const newWeight = zasypanie * przelicznik;
+
+    setCalculatedWeight(newWeight > 0 ? Number(newWeight.toFixed(1)) : 0);
   };
 
   const handleSave = async () => {
@@ -76,7 +106,7 @@ export default function OperatorCorrection() {
       oldWeight: cell?.waga || 0,
       newWeight: calculatedWeight,
       reason: "Korekta operatora",
-      operator: "OPERATOR",
+      operator: "ADMIN",
       timestamp: Date.now(),
     });
 
@@ -87,17 +117,13 @@ export default function OperatorCorrection() {
 
   return (
     <div className="correction-container">
-      <h2 className="correction-title">Korekta wagowa (pomiar lustra)</h2>
+      <h2 className="correction-title">Korekta wagowa (ADMIN)</h2>
 
       {/* KOMORA */}
       <div className="correction-section">
-        <label htmlFor="cellSelect" className="correction-label">
-          Komora
-        </label>
+        <label className="correction-label">Komora</label>
 
         <select
-          id="cellSelect"
-          name="cellSelect"
           className="correction-input"
           value={cellId}
           onChange={(e) => {
@@ -126,13 +152,9 @@ export default function OperatorCorrection() {
 
       {/* LUZ */}
       <div className="correction-section">
-        <label htmlFor="luzInput" className="correction-label">
-          Luz (m)
-        </label>
+        <label className="correction-label">Luz (m)</label>
 
         <input
-          id="luzInput"
-          name="luzInput"
           type="number"
           step="0.01"
           className="correction-input"
@@ -154,10 +176,7 @@ export default function OperatorCorrection() {
       </button>
 
       {calculatedWeight !== null && (
-        <button
-          className="correction-btn correction-save"
-          onClick={handleSave}
-        >
+        <button className="correction-btn correction-save" onClick={handleSave}>
           Zapisz korektę
         </button>
       )}

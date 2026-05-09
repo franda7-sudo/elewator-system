@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { db } from "../../../firebase";
+import { db } from "../../../firebase.js";
 import { collection, getDocs } from "firebase/firestore";
 
 const AdminUserContext = createContext();

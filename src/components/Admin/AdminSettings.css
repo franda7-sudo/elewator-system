@@ -1,0 +1,74 @@
+.admin-settings-wrapper {
+  padding: 24px;
+  background: #111;
+  min-height: 100vh;
+  color: #e5e5e5;
+  font-family: "Inter", sans-serif;
+}
+
+.admin-settings-wrapper h2 {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #fafafa;
+}
+
+/* Sekcje */
+.settings-section {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.settings-section h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 20px;
+  color: #ddd;
+  font-weight: 500;
+}
+
+/* Wiersze ustawień */
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.settings-row:last-child {
+  border-bottom: none;
+}
+
+.settings-row span {
+  font-size: 15px;
+  color: #ccc;
+}
+
+/* Inputy */
+.settings-row input[type="number"] {
+  width: 90px;
+  padding: 6px 8px;
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.settings-row input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* Placeholder sekcji w przygotowaniu */
+.settings-section p {
+  margin: 0;
+  color: #999;
+  font-size: 14px;
+}

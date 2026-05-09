@@ -1,126 +1,122 @@
+/* ================================
+   SCADA-HMI SidePanel (FINAL)
+   ================================ */
+
 .sidepanel {
   position: fixed;
   right: 0;
   top: 0;
-  width: 350px;
+  width: 360px;
   height: 100vh;
-  background: #1e293b;
-  border-left: 1px solid #334155;
-  box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+  background: #0f172a;
+  border-left: 2px solid #1e293b;
+  box-shadow: -6px 0 18px rgba(0, 0, 0, 0.55);
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  padding: 0;
   color: #f8fafc;
+  font-family: "Inter", sans-serif;
 }
 
-.sidepanel-header {
+.sidepanel h3 {
+  margin: 0;
   padding: 20px;
-  background: #0f172a;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #334155;
-}
-
-.close-x {
-  background: none;
-  border: none;
-  color: #94a3b8;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.sidepanel-content {
-  padding: 20px;
-  flex-grow: 1;
-  overflow-y: auto;
+  background: #0a0f1a;
+  border-bottom: 2px solid #1e293b;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
 }
 
 .sidepanel label {
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px;
+  margin: 16px 20px;
   font-size: 0.85rem;
   color: #94a3b8;
+  font-weight: 500;
 }
 
+.sidepanel select,
 .sidepanel input[type="text"],
-.sidepanel input[type="number"],
-.sidepanel select {
-  margin-top: 5px;
-  padding: 8px;
-  background: #0f172a;
+.sidepanel input[type="number"] {
+  margin-top: 6px;
+  padding: 10px;
+  background: #111827;
   border: 1px solid #334155;
-  border-radius: 4px;
-  color: white;
-}
-
-.input-danger {
-  border-color: #ef4444 !important;
-  color: #fca5a5 !important;
-}
-
-.stats-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.quality-preview {
-  background: #0f172a;
-  padding: 12px;
   border-radius: 6px;
-  margin-bottom: 20px;
-  border-left: 3px solid #fbbf24;
+  color: #f8fafc;
+  font-size: 0.9rem;
+  transition: 0.15s ease;
 }
 
-.quality-preview h4 {
-  margin: 0 0 8px 0;
-  font-size: 0.8rem;
-  color: #fbbf24;
-}
-
-.quality-param {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  margin-bottom: 4px;
+.sidepanel select:focus,
+.sidepanel input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 6px rgba(59,130,246,0.4);
+  outline: none;
 }
 
 .checkbox-row {
   flex-direction: row !important;
   align-items: center;
   gap: 10px;
+  margin: 10px 20px;
   cursor: pointer;
   color: #f8fafc !important;
+  font-size: 0.85rem;
 }
 
 .sidepanel-buttons {
   padding: 20px;
-  background: #0f172a;
+  background: #0a0f1a;
+  border-top: 2px solid #1e293b;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 12px;
+  margin-top: auto;
 }
 
 .save-btn {
   background: #10b981;
   color: white;
   border: none;
-  padding: 10px;
-  border-radius: 4px;
-  font-weight: bold;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: 700;
   cursor: pointer;
+  transition: 0.15s ease;
 }
 
-.save-btn:hover { background: #059669; }
+.save-btn:hover {
+  background: #059669;
+}
 
 .close-btn {
   background: #334155;
   color: white;
   border: none;
-  padding: 10px;
-  border-radius: 4px;
+  padding: 12px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.close-btn:hover {
+  background: #475569;
+}
+
+/* Scrollbar */
+.sidepanel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidepanel::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 10px;
+}
+
+.sidepanel::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }

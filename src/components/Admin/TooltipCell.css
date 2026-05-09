@@ -1,0 +1,72 @@
+/* ================================
+   SCADA-HMI TooltipCell (FINAL)
+   ================================ */
+
+.tooltip-cell {
+  position: fixed;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 18px;
+  width: 260px;
+  color: #f8fafc;
+  z-index: 9999;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55);
+  font-family: "Inter", sans-serif;
+  animation: tooltip-fade 0.15s ease-out;
+}
+
+/* Fade-in */
+@keyframes tooltip-fade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* HEADER */
+.tooltip-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #e2e8f0;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 6px;
+}
+
+/* ROWS */
+.tooltip-row {
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tooltip-label {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.tooltip-value {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+/* LED WARNINGS */
+.tooltip-warning {
+  color: #facc15;
+  font-weight: 700;
+}
+
+.tooltip-danger {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+/* FOOTER */
+.tooltip-footer {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #1e293b;
+  font-size: 0.75rem;
+  color: #64748b;
+  text-align: right;
+}

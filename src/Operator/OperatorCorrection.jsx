@@ -9,7 +9,7 @@ export default function OperatorCorrection() {
   const [gap, setGap] = useState("");
   const [calculatedWeight, setCalculatedWeight] = useState(null);
 
-  // 🔥 LIVE pobieranie komór – tak jak admin
+  // 🔥 LIVE pobieranie komór
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "cells"), (snap) => {
       const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -24,29 +24,68 @@ export default function OperatorCorrection() {
     setCalculatedWeight(null);
   };
 
+  // 🔥 ALGORYTM 1:1 ELEWATOR — ile JEST w komorze
   const calculate = () => {
     if (!selectedCell || !gap) return;
 
-    // 🔥 używamy TYLKO prawidłowego pola
-    const currentWeight = selectedCell.waga || 0;
+    const luz = Number(gap);
+    const id = selectedCell.id;
+    const grain = selectedCell.grainType;
 
-    // 🔥 stały współczynnik (tak jak w Twojej starej korekcie operatora)
-    const factor = 50;
+    let wysokosc = 0;
+    let przelicznik = 0;
 
-    const newWeight = currentWeight - Number(gap) * factor;
+    // ============================
+    // 🔥 KOMORY S i G
+    // ============================
+    if (id.startsWith("S") || id.startsWith("G")) {
+      wysokosc = 24;
+
+      if (grain === "pszenica") przelicznik = 11.5;
+      if (grain === "żyto")     przelicznik = 11;
+      if (grain === "owies")    przelicznik = 8;
+      if (grain === "jęczmień") przelicznik = 10;
+      if (grain === "pellet")   przelicznik = 10;
+    }
+
+    // ============================
+    // 🔥 KOMORY N
+    // ============================
+    if (id.startsWith("N")) {
+      wysokosc = 28;
+
+      if (grain === "pszenica") przelicznik = 39.5;
+      if (grain === "żyto")     przelicznik = 39;
+    }
+
+    // ============================
+    // 🔥 KOMORY W
+    // ============================
+    if (id.endsWith("W")) {
+      wysokosc = 24;
+
+      if (id === "43W") przelicznik = 4;
+      if (["44W","45W","48W","49W","51W","52W"].includes(id)) przelicznik = 2.5;
+      if (["46W","47W","50W"].includes(id)) przelicznik = 5;
+    }
+
+    // ============================
+    // 🔥 OBLICZENIA
+    // ============================
+    const zasypanie = wysokosc - luz;
+    const newWeight = zasypanie * przelicznik;
+
     setCalculatedWeight(newWeight > 0 ? Number(newWeight.toFixed(1)) : 0);
   };
 
   const saveCorrection = async () => {
     if (!selectedCell || calculatedWeight === null) return;
 
-    // 🔥 zapis do PRAWDZIWEGO pola
     await updateDoc(doc(db, "cells", selectedCell.id), {
       waga: calculatedWeight,
       updatedAt: Date.now(),
     });
 
-    // 🔥 zapis historii korekt – tak jak admin
     await addDoc(collection(db, "corrections"), {
       cellId: selectedCell.id,
       oldWeight: selectedCell.waga || 0,

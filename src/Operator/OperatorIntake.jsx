@@ -4,7 +4,10 @@ import { db } from "../firebase";
 import {
   collection,
   addDoc,
-  serverTimestamp
+  serverTimestamp,
+  doc,
+  getDoc,
+  updateDoc
 } from "firebase/firestore";
 import "./OperatorView.css";
 
@@ -57,6 +60,8 @@ export default function OperatorIntake() {
   const canMatch =
     grain && deliveryId.trim() !== "" && allParamsFilled;
 
+  const cellGrain = (c) => c.grain || c.grainType || null;
+
   // 🔥 DYNAMICZNE dopasowanie grupy jakości
   const matchQualityGroup = () => {
     const q = qualityConfig[grain];
@@ -87,7 +92,15 @@ export default function OperatorIntake() {
     }
 
     if (!matched) {
-      const special = getSpecialCells(grain);
+      let special = getSpecialCells(grain) || [];
+
+      if (!special.length) {
+        special = cells.filter(
+          (c) =>
+            (c.special || c.isSpecial) &&
+            cellGrain(c) === grain
+        );
+      }
 
       if (special.length === 0) {
         alert(
@@ -106,10 +119,14 @@ export default function OperatorIntake() {
 
       setGroupResult(null);
       setProposedCells(
-        special.map((c) => ({
-          id: c.id,
-          fill: Number(c.waga || 0) / Number(c.capacity || 1),
-        }))
+        special.map((c) => {
+          const pending = Number(c.pending || 0);
+          const current = Number(c.waga || 0) + pending;
+          return {
+            id: c.id,
+            fill: current / Number(c.capacity || 1),
+          };
+        })
       );
       setRequiresApproval(true);
       return;
@@ -145,52 +162,81 @@ export default function OperatorIntake() {
     setGroupResult(matched);
     setRequiresApproval(needsApproval);
 
+    // 🔥 OSTRZEŻENIE 90% + BLOKADA POJEMNOŚCI
     const available = cells
       .filter((c) => {
         const groupField = c.groupId || c.group;
         if (groupField !== matched.groupId) return false;
         if (c.blocked) return false;
+        if (cellGrain(c) !== grain) return false;
 
-        const fill =
-          Number(c.waga || 0) / Number(c.capacity || 1);
+        const pending = Number(c.pending || 0);
+        const current = Number(c.waga || 0) + pending;
+        const capacity = Number(c.capacity || 1);
+        const free = capacity - current;
 
-        return fill < 0.95;
+        const fill = current / capacity;
+
+        // ⚠️ OSTRZEŻENIE PRZY 90%
+        if (fill >= 0.9 && fill < 1) {
+          console.warn(
+            `⚠️ Komora ${c.id} jest zapełniona w ${Math.round(fill * 100)}%`
+          );
+        }
+
+        // ❌ BLOKADA jeśli dostawa > wolne miejsce
+        if (finalWeight > free) return false;
+
+        return true;
       })
-      .map((c) => ({
-        id: c.id,
-        fill: Number(c.waga || 0) / Number(c.capacity || 1),
-      }))
+      .map((c) => {
+        const pending = Number(c.pending || 0);
+        const current = Number(c.waga || 0) + pending;
+        return {
+          id: c.id,
+          fill: current / Number(c.capacity || 1),
+        };
+      })
       .sort((a, b) => b.fill - a.fill)
       .slice(0, 2);
 
     if (available.length === 0) {
-      const special = getSpecialCells(grain);
-
-      if (special.length === 0) {
-        alert("Brak wolnych komór i brak komór specjalnych.");
-        setProposedCells([]);
-        setRequiresApproval(true);
-        return;
-      }
-
-      alert("Brak wolnych komór. Dostępne tylko komory specjalne.");
-
-      setProposedCells(
-        special.map((c) => ({
-          id: c.id,
-          fill: Number(c.waga || 0) / Number(c.capacity || 1),
-        }))
-      );
-      setRequiresApproval(true);
+      alert("Brak wolnych komór dla tej grupy jakości.");
+      setProposedCells([]);
       return;
     }
 
     setProposedCells(available);
   };
 
-  // 🔥 Zatwierdzenie dostawy — TERAZ ZAPISUJE DO FIRESTORE
   const confirm = async () => {
     if (!chosenCell) return alert("Wybierz komorę.");
+
+    // 🔥 TWARDY LIMIT — OSTATNIA LINIA OBRONY
+    const cellRef = doc(db, "cells", chosenCell);
+    const cellSnap = await getDoc(cellRef);
+    const cellData = cellSnap.data();
+
+    const pendingNow = Number(cellData.pending || 0);
+    const current = Number(cellData.waga || 0) + pendingNow;
+    const capacity = Number(cellData.capacity || 1);
+    const free = capacity - current;
+
+    // ❌ BLOKADA jeśli dostawa > wolne miejsce
+    if (finalWeight > free) {
+      alert(
+        `❌ Komora ${chosenCell} nie ma wystarczającej pojemności.\n` +
+        `Wolne miejsce: ${free} t\n` +
+        `Dostawa: ${finalWeight} t`
+      );
+      return;
+    }
+
+    // 🔥 REZERWACJA MIEJSCA
+    await updateDoc(cellRef, {
+      pending: pendingNow + finalWeight,
+      updatedAt: Date.now(),
+    });
 
     let reason = "ok";
 
@@ -218,7 +264,6 @@ export default function OperatorIntake() {
       reason,
     };
 
-    // 🔥 1) ZAPIS PRZYJĘCIA DO FIRESTORE
     await addDoc(collection(db, "deliveries"), {
       deliveryId,
       grain,
@@ -234,7 +279,6 @@ export default function OperatorIntake() {
       timestamp: serverTimestamp(),
     });
 
-    // 🔥 2) ZAPIS RUCHU DO FIRESTORE (movements)
     await addDoc(collection(db, "movements"), {
       type: "przyjęcie",
       grainType: grain,
@@ -244,7 +288,6 @@ export default function OperatorIntake() {
       timestamp: serverTimestamp(),
     });
 
-    // 🔥 3) STARA LOGIKA — zostaje
     await addPendingDelivery(delivery);
 
     if (!requiresApproval) {
@@ -253,7 +296,6 @@ export default function OperatorIntake() {
       alert("Dostawa zgłoszona do zatwierdzenia.");
     }
 
-    // reset
     setDeliveryId("");
     setAmount("");
     setSample({});

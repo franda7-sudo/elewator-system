@@ -1,6 +1,6 @@
 // src/utils/DallasParser.js
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../firebase.js";
 
 /**
  * PARSER PLIKU .DAT (WinXP sp3)

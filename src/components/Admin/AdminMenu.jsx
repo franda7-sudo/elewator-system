@@ -1,30 +1,32 @@
 import React from "react";
 import { Box } from "@mui/material";
-import { NavLink } from "react-router-dom"; // Link został usunięty na rzecz NavLink dla spójności
+import { NavLink } from "react-router-dom";
 
 export default function AdminMenu() {
   const baseStyle = {
-    color: "#bbb",
+    padding: "10px 14px",
+    borderRadius: "6px",
+    color: "#d4d4d4",
     textDecoration: "none",
-    padding: "8px 14px",
-    fontWeight: "600",
-    fontSize: "14px",
+    fontSize: "15px",
     display: "flex",
     alignItems: "center",
-    borderRadius: "4px",
-    transition: "all 0.2s ease",
-    whiteSpace: "nowrap",
     gap: "6px",
+    borderLeft: "4px solid transparent",
+    transition: "0.18s ease",
+    whiteSpace: "nowrap",
   };
 
   const activeStyle = {
     ...baseStyle,
-    color: "#4caf50",
-    backgroundColor: "rgba(76, 175, 80, 0.1)",
+    backgroundColor: "#222",
+    color: "#fff",
+    borderLeft: "4px solid #4ade80", // zielony LED
+    fontWeight: 600,
   };
 
-  // Funkcja pomocnicza, aby nie powtarzać logiki stylu w każdym NavLink
-  const getNavLinkStyle = ({ isActive }) => (isActive ? activeStyle : baseStyle);
+  const getNavLinkStyle = ({ isActive }) =>
+    isActive ? activeStyle : baseStyle;
 
   return (
     <Box
@@ -35,30 +37,37 @@ export default function AdminMenu() {
         flexDirection: "row",
         gap: 1,
         p: "10px 20px",
-        bgcolor: "#1e1e1e",
-        borderBottom: "1px solid #333",
+        bgcolor: "#0d0d0d",
+        borderBottom: "1px solid #222",
         overflowX: "auto",
         position: "sticky",
         top: 0,
         zIndex: 1100,
         "&::-webkit-scrollbar": { height: "4px" },
-        "&::-webkit-scrollbar-thumb": { bgcolor: "#333", borderRadius: "10px" },
+        "&::-webkit-scrollbar-thumb": {
+          bgcolor: "#333",
+          borderRadius: "10px",
+        },
         scrollbarWidth: "thin",
       }}
     >
+      {/* LOGO */}
       <Box
         sx={{
-          color: "#4caf50",
+          color: "#4ade80",
           fontWeight: "bold",
           mr: 3,
           display: "flex",
           alignItems: "center",
           flexShrink: 0,
+          fontSize: "16px",
+          letterSpacing: "0.5px",
         }}
       >
         ELEVATOR PRO
       </Box>
 
+      {/* MENU */}
       <NavLink to="/admin/map" style={getNavLinkStyle}>🗺️ Mapa</NavLink>
       <NavLink to="/admin/permissions" style={getNavLinkStyle}>🔐 Uprawnienia / PIN</NavLink>
       <NavLink to="/admin/operators" style={getNavLinkStyle}>👥 Operatorzy</NavLink>
@@ -73,11 +82,7 @@ export default function AdminMenu() {
       <NavLink to="/admin/corrections" style={getNavLinkStyle}>⚖ Korekty</NavLink>
       <NavLink to="/admin/settings" style={getNavLinkStyle}>⚙️ Ustawienia</NavLink>
       <NavLink to="/admin/diagnostics" style={getNavLinkStyle}>🧰 Diagnostyka</NavLink>
-
-      {/* POPRAWIONY ELEMENT - ujednolicony styl do reszty menu */}
-      <NavLink to="/admin/release-programs" style={getNavLinkStyle}>
-        ⚙️ Programy Wydań
-      </NavLink>
+      <NavLink to="/admin/release-programs" style={getNavLinkStyle}>⚙️ Programy Wydań</NavLink>
     </Box>
   );
 }

@@ -1,86 +1,99 @@
-/* RESET I PODSTAWA */
+/* ================================
+   SCADA-HMI AdminMap.css (FINAL)
+   ================================ */
+
+/* WRAPPER */
 .admin-map-wrapper {
-  padding: 20px;
-  color: #f8fafc;
-  background-color: #0f172a;
+  padding: 24px;
+  background: #0b0f19;
   min-height: 100vh;
-  font-family: 'Inter', sans-serif;
+  color: #e2e8f0;
+  font-family: "Inter", sans-serif;
 }
 
+/* TOP BAR */
 .map-top-bar {
-  margin-bottom: 25px;
-  border-bottom: 1px solid #1e293b;
-  padding-bottom: 10px;
+  margin-bottom: 28px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #1e293b;
 }
 
+/* SECTIONS */
 .elevator-section {
-  margin-bottom: 40px;
+  margin-bottom: 42px;
 }
 
 .elevator-section h3 {
-  font-size: 1.1rem;
-  margin-bottom: 15px;
+  font-size: 1.15rem;
+  font-weight: 600;
   color: #94a3b8;
   display: flex;
   align-items: center;
 }
 
+/* BADGE */
 .section-badge {
-  background: #3b82f6;
+  background: linear-gradient(145deg, #2563eb, #1d4ed8);
   color: white;
-  padding: 2px 10px;
-  border-radius: 4px;
+  padding: 3px 12px;
+  border-radius: 6px;
   font-weight: 800;
   margin-right: 12px;
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
 }
 
-/* ⭐ UKŁADY GRID - SZTYWNE KOLUMNY ⭐ */
+/* ================================
+   GRID LAYOUTS
+   ================================ */
+
 .grid-10-cols {
   display: grid !important;
   grid-template-columns: repeat(10, minmax(0, 1fr)) !important;
-  gap: 10px;
-  width: 100%;
+  gap: 12px;
 }
 
 .grid-5-cols {
   display: grid !important;
   grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-  gap: 10px;
-  width: 50%; /* Aby 5 komór miało taką samą szerokość jak w rzędach po 10 */
+  gap: 12px;
+  width: 50%;
 }
 
-/* ⭐ KOMÓRKA - BLOKADA ROZMIARU ⭐ */
+/* ================================
+   KAFELKI — SCADA-HMI
+   ================================ */
+
 .cell-box {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 8px;
-  padding: 10px;
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 10px;
+  padding: 12px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  min-height: 130px;
-  width: 100% !important;
-  min-width: 0 !important; /* Kluczowe: ignoruj tekst */
-  box-sizing: border-box;
-  overflow: hidden;
+  min-height: 140px;
+  transition: 0.2s ease;
   position: relative;
-  transition: all 0.2s ease;
+  box-shadow: inset 0 0 0 1px #0f172a;
 }
 
 .cell-box:hover {
   background: #1e293b;
   border-color: #3b82f6;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  z-index: 2;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  z-index: 3;
 }
 
 .is-selected {
   outline: 2px solid #3b82f6;
-  background: #2d3a54 !important;
+  background: #243045 !important;
 }
 
-/* ELEMENTY WEWNĘTRZNE */
+/* ================================
+   HEADER
+   ================================ */
+
 .cell-header {
   display: flex;
   justify-content: space-between;
@@ -94,27 +107,30 @@
 }
 
 .cell-weight {
-  font-weight: bold;
+  font-weight: 700;
   color: #10b981;
   font-size: 0.85rem;
 }
+
+/* ================================
+   BODY
+   ================================ */
 
 .cell-body {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .cell-grain-label {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 900;
-  color: #ffffff;
+  color: #f1f5f9;
   text-transform: uppercase;
   margin-bottom: 4px;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* Wielokropek dla długich nazw */
+  text-overflow: ellipsis;
 }
 
 .cell-param-main {
@@ -134,39 +150,71 @@
   background: #0f172a;
   border: 1px solid #334155;
   font-size: 0.65rem;
-  padding: 1px 4px;
-  border-radius: 3px;
+  padding: 2px 5px;
+  border-radius: 4px;
   color: #94a3b8;
 }
 
+/* ================================
+   FOOTER
+   ================================ */
+
 .cell-footer {
-  margin-top: 8px;
+  margin-top: 10px;
   border-top: 1px solid #334155;
   padding-top: 6px;
   display: flex;
   justify-content: space-between;
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   color: #475569;
 }
 
-/* ALARM */
+/* ================================
+   ALARM
+   ================================ */
+
 .alarm-blink {
   animation: alarm-pulse 1.5s infinite;
   border-color: #ef4444 !important;
 }
 
 @keyframes alarm-pulse {
-  0% { background: #1e293b; }
+  0% { background: #111827; }
   50% { background: #450a0a; }
-  100% { background: #1e293b; }
+  100% { background: #111827; }
 }
+
+/* ================================
+   LED WARNINGS
+   ================================ */
+
+.led-warning {
+  box-shadow: 0 0 14px 6px rgba(255, 255, 0, 0.55);
+}
+
+.led-overfill {
+  box-shadow: 0 0 18px 8px rgba(255, 0, 0, 0.65);
+}
+
+.pending-tag {
+  color: #facc15;
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+/* ================================
+   TOOLTIP
+   ================================ */
 
 .floating-tooltip {
   position: fixed;
   z-index: 9999;
 }
 
-/* RESPONSYWNOŚĆ */
+/* ================================
+   RESPONSYWNOŚĆ
+   ================================ */
+
 @media (max-width: 1400px) {
   .grid-5-cols { width: 70%; }
 }
