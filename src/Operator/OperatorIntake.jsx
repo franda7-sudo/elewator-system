@@ -259,7 +259,7 @@ export default function OperatorIntake() {
       createdAt: Date.now(),
       requiresApproval,
       approved: !requiresApproval,
-      status: requiresApproval ? "requires_admin" : "auto_approved",
+      status: requiresApproval ? "requires_admin" : "waiting_unload",
       qualityStatus: requiresApproval ? "nienormatywna" : "normatywna",
       reason,
     };
